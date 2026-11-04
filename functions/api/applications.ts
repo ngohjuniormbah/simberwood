@@ -12,7 +12,7 @@ export const onRequestPost: PagesFunction<SupabaseEnv> = async ({ request, env }
     return json({ error: 'Please complete all required application fields.' }, 400);
   }
   const email = String(data.email).trim();
-  if (email.length > 254 || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return json({ error: 'Enter a valid email address.' }, 400);
   }
 
@@ -32,12 +32,12 @@ export const onRequestPost: PagesFunction<SupabaseEnv> = async ({ request, env }
       children: data.children,
       everyone_agrees: data.everyoneAgrees,
       owned_dog: data.ownedDog,
-      current_pets: data.currentPets ?? '',
+      current_pets: typeof data.currentPets === 'string' ? data.currentPets : '',
       preferred_color: data.preferredColor,
       preferred_sex: data.preferredSex,
       vet_care: data.vetCare,
-      custom_puppy_name: data.customPuppyName ?? null,
-      selected_puppy_id: data.selectedPuppyId || null,
+      custom_puppy_name: typeof data.customPuppyName === 'string' ? data.customPuppyName : null,
+      selected_puppy_id: typeof data.selectedPuppyId === 'string' ? data.selectedPuppyId : null,
       status: 'pending',
     });
     if (!response.ok) {
