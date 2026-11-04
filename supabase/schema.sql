@@ -97,3 +97,38 @@ alter table public.gallery_items enable row level security;
 alter table public.adoption_applications enable row level security;
 alter table public.contact_messages enable row level security;
 alter table public.social_proof_messages enable row level security;
+
+-- Homepage hero backgrounds are stored in Supabase Storage; slide metadata and
+-- slideshow controls are stored in PostgreSQL.
+create table if not exists public.hero_slides (
+  id uuid primary key default gen_random_uuid(),
+  image_url text not null,
+  storage_path text not null unique,
+  position integer not null default 0,
+  created_at timestamptz not null default now()
+);
+create index if not exists hero_slides_position on public.hero_slides(position, created_at);
+
+create table if not exists public.hero_settings (
+  id text primary key check (id = 'main'),
+  slideshow_enabled boolean not null default true,
+  interval_seconds integer not null default 5 check (interval_seconds between 3 and 30),
+  updated_at timestamptz not null default now()
+);
+insert into public.hero_settings (id) values ('main') on conflict (id) do nothing;
+
+alter table public.hero_slides enable row level security;
+alter table public.hero_settings enable row level security;
+
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'hero-backgrounds',
+  'hero-backgrounds',
+  true,
+  5242880,
+  array['image/jpeg', 'image/png', 'image/webp', 'image/avif']
+)
+on conflict (id) do update set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
