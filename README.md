@@ -21,6 +21,10 @@ The D1-backed forms need the Pages Functions runtime and a local D1 database. In
 6. Make sure the Pages D1 binding is named `DB` and points to `simberwood-db` (the binding is also declared in `wrangler.toml`). Redeploy after changing the binding.
 7. Test an adoption application and contact message on the deployed URL. Each form should show confirmation only after D1 accepts the record.
 
+### If the build is running under Workers Builds
+
+The deploy log must not use `npx wrangler deploy`; that command publishes a Worker and fails for this Pages project. In the Cloudflare dashboard, open the connected Worker's **Settings → Build** and change **Deploy command** to `npm run deploy`. This project script runs `wrangler pages deploy dist --project-name simberwood`. Confirm that the Pages project is named `simberwood` and the build token has Pages deployment permission. For automatic Pages Git deployments, connect the repository as a **Pages** project instead, set build command to `npm run build` and output directory to `dist`, and do not configure a Worker deploy command.
+
 ## Data and admin
 
 `migrations/0001_initial.sql` creates tables for puppies, reviews, gallery items, adoption applications, contact messages, and social proof messages. The public adoption and contact forms write to D1 through Pages Functions. The existing admin editor and catalog content still use browser `localStorage`; those edits do not sync across devices or persist as a shared D1 catalog. The admin inbox also reads local browser storage, so D1 submissions will not appear there on another device yet. Protect `/admin` with Cloudflare Access before using it with real customer data. Do not treat the client-side admin page as an authentication boundary.
