@@ -1,0 +1,6 @@
+{
+  "name": "Simberwood Cocker Spaniels",
+  "description": "Ethical Cocker Spaniel adoption, health-tested pedigrees, and lifelong family companions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
