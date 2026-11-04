@@ -5,4 +5,4 @@ pages_build_output_dir = "./dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "simberwood-db"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "609a93f5-287b-4407-ba28-26e8e309121c"
