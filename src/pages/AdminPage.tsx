@@ -25,8 +25,9 @@ import {
   Upload,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { HeroSettingsTab } from '../components/HeroSettingsTab';
 
-type AdminTab = 'pets' | 'reviews' | 'gallery' | 'applications' | 'notifications';
+type AdminTab = 'pets' | 'reviews' | 'gallery' | 'applications' | 'notifications' | 'settings';
 
 export const AdminPage: React.FC = () => {
   const {
@@ -517,6 +518,17 @@ export const AdminPage: React.FC = () => {
               }`}
             >
               Notifications
+            </button>
+
+            <button
+              onClick={() => setActiveTab('settings')}
+              className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+                activeTab === 'settings'
+                  ? 'bg-neutral-950 text-white shadow-xs'
+                  : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100'
+              }`}
+            >
+              Settings
             </button>
           </nav>
         </div>
@@ -1146,6 +1158,7 @@ export const AdminPage: React.FC = () => {
           </div>
         )}
 
+        {activeTab === 'settings' && <HeroSettingsTab />}
       </div>
 
       {/* ========================================================= */}
