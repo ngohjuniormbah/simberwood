@@ -75,6 +75,36 @@ export const HomePage: React.FC<HomePageProps> = ({
     return () => clearInterval(slideTimer);
   }, [galleryItems.length]);
 
+  const [heroSlides, setHeroSlides] = useState<Array<{ id: string; image_url: string }>>([]);
+  const [heroSettings, setHeroSettings] = useState({ slideshow_enabled: true, interval_seconds: 5 });
+  const [heroSlideIndex, setHeroSlideIndex] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    fetch('/api/hero-slides')
+      .then(async (response) => {
+        if (!response.ok) return null;
+        return response.json();
+      })
+      .then((result) => {
+        if (!active || !result) return;
+        setHeroSlides(Array.isArray(result.slides) ? result.slides : []);
+        if (result.settings) setHeroSettings(result.settings);
+      })
+      .catch(() => {
+        // Keep the default animated hero if the slideshow has not been configured.
+      });
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    if (heroSlides.length < 2 || !heroSettings.slideshow_enabled) return;
+    const timer = window.setInterval(() => {
+      setHeroSlideIndex((current) => (current + 1) % heroSlides.length);
+    }, Math.max(3, heroSettings.interval_seconds) * 1000);
+    return () => window.clearInterval(timer);
+  }, [heroSlides.length, heroSettings.slideshow_enabled, heroSettings.interval_seconds]);
+
   const handlePrevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + galleryItems.length) % galleryItems.length);
   };
@@ -118,7 +148,25 @@ export const HomePage: React.FC<HomePageProps> = ({
   return (
     <div className="bg-white overflow-hidden">
       {/* Hero Section: Animated Gray Gradient Background with 21st.dev Style Smooth Motions */}
-      <section className="relative overflow-hidden pt-12 pb-14 md:pt-16 md:pb-20 animated-gray-gradient-hero text-white">
+      <section className={`relative overflow-hidden pt-12 pb-14 md:pt-16 md:pb-20 ${heroSlides.length ? 'bg-neutral-900' : 'animated-gray-gradient-hero'} text-white`}>
+        {heroSlides[heroSlideIndex] && (
+          <>
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={heroSlides[heroSlideIndex].id}
+                src={heroSlides[heroSlideIndex].image_url}
+                alt=""
+                aria-hidden="true"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8 }}
+                className="absolute inset-0 z-0 h-full w-full object-cover"
+              />
+            </AnimatePresence>
+            <div aria-hidden="true" className="absolute inset-0 z-[1] bg-black/55" />
+          </>
+        )}
         {/* Floating Animated Ambient Gray Glowing Orbs */}
         <motion.div
           animate={{
