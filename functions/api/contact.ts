@@ -10,7 +10,7 @@ export const onRequestPost: PagesFunction<SupabaseEnv> = async ({ request, env }
   const name = typeof data.name === 'string' ? data.name.trim() : '';
   const email = typeof data.email === 'string' ? data.email.trim() : '';
   const message = typeof data.message === 'string' ? data.message.trim() : '';
-  if (!name || name.length > 120 || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) || email.length > 254 || !message || message.length > 5000) {
+  if (!name || name.length > 120 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254 || !message || message.length > 5000) {
     return json({ error: 'Enter a valid name, email, and message (up to 5,000 characters).' }, 400);
   }
 
