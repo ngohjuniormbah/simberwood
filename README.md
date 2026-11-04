@@ -1,6 +1,6 @@
 # Simberwood Cocker Spaniels
 
-Responsive React and Vite website for Simberwood, with Cloudflare Pages Functions and a D1 schema for adoption applications and contact messages.
+Responsive React and Vite website for Simberwood, deployed on Cloudflare Pages. Adoption applications and contact messages are written to Supabase PostgreSQL through Cloudflare Pages Functions.
 
 ## Run locally
 
@@ -9,24 +9,28 @@ npm install
 npm run dev
 ```
 
-The D1-backed forms need the Pages Functions runtime and a local D1 database. Install Wrangler, create the database as described below, set `database_id` in `wrangler.toml`, then run `npx wrangler pages dev dist` after building. Configure the local D1 database binding before relying on form submissions.
+The Supabase-backed forms require the Cloudflare Pages Functions runtime and the two server-side values in `.env`: `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. Never expose the service role key in browser code or a `VITE_` variable.
+
+## Set up Supabase
+
+1. Create a Supabase project.
+2. Open **SQL Editor → New query**.
+3. Open `supabase/schema.sql` from this repository, copy the full file into the SQL Editor, and click **Run** once.
+4. In Supabase **Project Settings → API**, copy the **Project URL** and the **service_role** key. Keep the service role key secret.
 
 ## Deploy to Cloudflare Pages
 
-1. Create a GitHub repository named `simberwood` and push this project.
-2. In Cloudflare, open **Workers & Pages → Create → Pages → Connect to Git** and select that repository.
-3. Use `npm run build` as the build command and `dist` as the output directory. Cloudflare Pages reads the Functions from `functions/`.
-4. Create a D1 database named `simberwood-db` and copy its ID into `wrangler.toml` in place of `REPLACE_WITH_D1_DATABASE_ID`.
-5. From the project directory, run `npx wrangler d1 execute simberwood-db --remote --file=migrations/0001_initial.sql` to create the tables.
-6. Make sure the Pages D1 binding is named `DB` and points to `simberwood-db` (the binding is also declared in `wrangler.toml`). Redeploy after changing the binding.
-7. Test an adoption application and contact message on the deployed URL. Each form should show confirmation only after D1 accepts the record.
+1. Connect the GitHub repository `ngohjuniormbah/simberwood` to the Cloudflare Pages project named `simberwood`.
+2. Set build command to `npm run build` and output directory to `dist`.
+3. In **Pages → simberwood → Settings → Variables and Secrets**, add encrypted secrets named exactly `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. Set them for Production (and Preview too if you use preview deployments).
+4. Save, then trigger a new deployment from the **Deployments** tab.
 
-### If the build is running under Workers Builds
-
-The deploy log must not use `npx wrangler deploy`; that command publishes a Worker and fails for this Pages project. In the Cloudflare dashboard, open the connected Worker's **Settings → Build** and change **Deploy command** to `npm run deploy`. This project script runs `wrangler pages deploy dist --project-name simberwood`. Confirm that the Pages project is named `simberwood` and the build token has Pages deployment permission. For automatic Pages Git deployments, connect the repository as a **Pages** project instead, set build command to `npm run build` and output directory to `dist`, and do not configure a Worker deploy command.
+The adoption and contact forms submit to `/api/applications` and `/api/contact`; Pages Functions write those rows to Supabase. The Functions return a success response only after Supabase accepts the insert.
 
 ## Data and admin
 
-`migrations/0001_initial.sql` creates tables for puppies, reviews, gallery items, adoption applications, contact messages, and social proof messages. The public adoption and contact forms write to D1 through Pages Functions. The existing admin editor and catalog content still use browser `localStorage`; those edits do not sync across devices or persist as a shared D1 catalog. The admin inbox also reads local browser storage, so D1 submissions will not appear there on another device yet. Protect `/admin` with Cloudflare Access before using it with real customer data. Do not treat the client-side admin page as an authentication boundary.
+`supabase/schema.sql` creates tables for puppies, reviews, gallery items, adoption applications, contact messages, and social proof messages. Row Level Security is enabled, and the website's service role key remains server-side in Cloudflare.
 
-Cloudflare D1 stores contact details and adoption applications, which contain personal information. Restrict Cloudflare dashboard access to trusted operators and apply a retention policy appropriate to your business.
+The existing catalog editor, reviews, gallery, social proof settings, and admin inbox still use browser `localStorage`; those edits do not sync to Supabase yet. Adoption and contact form submissions are stored in Supabase but are not yet fetched into the admin inbox. Protect `/admin` with Cloudflare Access before using it with real customer data; the page itself does not authenticate administrators.
+
+Supabase stores contact and adoption information. Restrict project access to trusted operators and apply a retention policy appropriate to your business.
