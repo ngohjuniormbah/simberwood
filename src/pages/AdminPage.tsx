@@ -1291,7 +1291,7 @@ export const AdminPage: React.FC = () => {
                   <input
                     ref={primaryFileInputRef}
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/webp,image/avif"
                     onChange={handlePrimaryPhotoUpload}
                     className="hidden"
                   />
@@ -1366,7 +1366,7 @@ export const AdminPage: React.FC = () => {
                   <input
                     ref={additionalFilesInputRef}
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/webp,image/avif"
                     multiple
                     onChange={handleAdditionalPhotosUpload}
                     className="hidden"
@@ -1516,7 +1516,7 @@ export const AdminPage: React.FC = () => {
                   <input
                     ref={reviewAuthorPhotoInputRef}
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/webp,image/avif"
                     onChange={handleReviewAuthorPhotoUpload}
                     className="hidden"
                   />
@@ -1624,7 +1624,7 @@ export const AdminPage: React.FC = () => {
                   <input
                     ref={reviewPhotoInputRef}
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/webp,image/avif"
                     onChange={handleReviewPhotoUpload}
                     className="hidden"
                   />
@@ -1741,7 +1741,7 @@ export const AdminPage: React.FC = () => {
                   <input
                     ref={galleryImageInputRef}
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/webp,image/avif"
                     onChange={handleGalleryImageUpload}
                     className="hidden"
                   />
