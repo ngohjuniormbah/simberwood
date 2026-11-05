@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'motion/react';
 
 export const GalleryPage: React.FC = () => {
   const { gallery } = useApp();
+  const visibleGallery = gallery.filter((item) => Boolean(item.imageUrl));
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const handleOpenLightbox = (index: number) => {
@@ -13,13 +14,13 @@ export const GalleryPage: React.FC = () => {
 
   const handleNext = () => {
     if (lightboxIndex !== null) {
-      setLightboxIndex((lightboxIndex + 1) % gallery.length);
+      setLightboxIndex((lightboxIndex + 1) % visibleGallery.length);
     }
   };
 
   const handlePrev = () => {
     if (lightboxIndex !== null) {
-      setLightboxIndex((lightboxIndex - 1 + gallery.length) % gallery.length);
+      setLightboxIndex((lightboxIndex - 1 + visibleGallery.length) % visibleGallery.length);
     }
   };
 
@@ -42,8 +43,11 @@ export const GalleryPage: React.FC = () => {
         </motion.div>
 
         {/* Gallery Grid with ON-PICTURE writeup and BELOW-PICTURE writeup */}
+        {visibleGallery.length === 0 ? (
+          <div className="mx-auto max-w-xl rounded-2xl bg-neutral-50 p-8 text-center text-sm text-neutral-600">No gallery photos have been added yet.</div>
+        ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {gallery.map((item, idx) => (
+          {visibleGallery.map((item, idx) => (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 20 }}
@@ -84,11 +88,12 @@ export const GalleryPage: React.FC = () => {
             </motion.div>
           ))}
         </div>
+        )}
       </div>
 
       {/* Lightbox Modal */}
       <AnimatePresence>
-        {lightboxIndex !== null && gallery[lightboxIndex] && (
+        {lightboxIndex !== null && visibleGallery[lightboxIndex] && (
           <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm">
             <div onClick={() => setLightboxIndex(null)} className="fixed inset-0" />
 
@@ -104,25 +109,25 @@ export const GalleryPage: React.FC = () => {
 
               <div className="relative w-full rounded-2xl overflow-hidden bg-neutral-950 shadow-2xl">
                 <img
-                  src={gallery[lightboxIndex].imageUrl}
-                  alt={gallery[lightboxIndex].captionWriteup}
+                  src={visibleGallery[lightboxIndex].imageUrl}
+                  alt={visibleGallery[lightboxIndex].captionWriteup}
                   className="w-full max-h-[75vh] object-contain mx-auto"
                 />
 
                 {/* Lightbox captions */}
                 <div className="p-4 bg-neutral-900 text-white border-t border-neutral-800 flex items-center justify-between gap-4">
                   <div>
-                    {gallery[lightboxIndex].pictureWriteup && (
+                    {visibleGallery[lightboxIndex].pictureWriteup && (
                       <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 block mb-0.5">
-                        {gallery[lightboxIndex].pictureWriteup}
+                        {visibleGallery[lightboxIndex].pictureWriteup}
                       </span>
                     )}
                     <p className="text-xs sm:text-sm text-neutral-200">
-                      {gallery[lightboxIndex].captionWriteup}
+                      {visibleGallery[lightboxIndex].captionWriteup}
                     </p>
                   </div>
                   <span className="text-xs text-neutral-500 shrink-0">
-                    {lightboxIndex + 1} / {gallery.length}
+                    {lightboxIndex + 1} / {visibleGallery.length}
                   </span>
                 </div>
 
