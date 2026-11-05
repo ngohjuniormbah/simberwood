@@ -22,7 +22,7 @@ The secret key grants elevated database access. It is sent only by server-side A
 
 ## Data scope
 
-The adoption form writes to `adoption_applications` and the contact form writes to `contact_messages` through Vercel API routes. The Supabase schema also creates puppies, reviews, gallery, and social-proof tables.
+The adoption form writes to `adoption_applications` and the contact form writes to `contact_messages` through Vercel API routes. Puppy, review, gallery, and hero slideshow images are stored in Supabase Storage; editable puppy/review/gallery content is synchronized through Supabase.
 
 The hero slideshow settings and uploaded background images are stored in Supabase. In the Admin **Settings** tab, enter the `ADMIN_DASHBOARD_PASSWORD` configured in Vercel before saving or uploading; images are uploaded to the public `hero-backgrounds` bucket. The rest of the admin page itself has no authentication, so protect `/admin` with Vercel Deployment Protection or another access-control layer before using its other editing tools.
 
