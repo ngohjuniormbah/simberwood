@@ -13,6 +13,12 @@
   }
 }
 
+/* Consistent soft corners on every button */
+button,
+[role="button"] {
+  border-radius: 0.625rem !important;
+}
+
 /* Custom scrollbar for clean aesthetic */
 ::-webkit-scrollbar {
   width: 8px;
