@@ -78,11 +78,11 @@ export const PUPPIES_DATA: Puppy[] = [
     dewormed: true,
     vetChecked: true,
     readyDate: 'Immediate / Ready for pickup or hand transport',
-    primaryImage: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=1000&q=80',
+    primaryImage: '',
     additionalImages: [
-      'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=1000&q=80'
+      '',
+      '',
+      ''
     ]
   },
   {
@@ -108,10 +108,10 @@ export const PUPPIES_DATA: Puppy[] = [
     dewormed: true,
     vetChecked: true,
     readyDate: 'Ready for Home Departure',
-    primaryImage: 'https://images.unsplash.com/photo-1598133894008-61f7fdb8cc3a?auto=format&fit=crop&w=1000&q=80',
+    primaryImage: '',
     additionalImages: [
-      'https://images.unsplash.com/photo-1598133894008-61f7fdb8cc3a?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1561037404-61cd46aa615b?auto=format&fit=crop&w=1000&q=80'
+      '',
+      ''
     ]
   },
   {
@@ -137,10 +137,10 @@ export const PUPPIES_DATA: Puppy[] = [
     dewormed: true,
     vetChecked: true,
     readyDate: 'Ready for Departure',
-    primaryImage: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=1000&q=80',
+    primaryImage: '',
     additionalImages: [
-      'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=1000&q=80'
+      '',
+      ''
     ]
   },
   {
@@ -166,10 +166,10 @@ export const PUPPIES_DATA: Puppy[] = [
     dewormed: true,
     vetChecked: true,
     readyDate: 'Immediate',
-    primaryImage: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1000&q=80',
+    primaryImage: '',
     additionalImages: [
-      'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=1000&q=80'
+      '',
+      ''
     ]
   },
   {
@@ -195,10 +195,10 @@ export const PUPPIES_DATA: Puppy[] = [
     dewormed: true,
     vetChecked: true,
     readyDate: 'Available Next Week',
-    primaryImage: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=1000&q=80',
+    primaryImage: '',
     additionalImages: [
-      'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=1000&q=80'
+      '',
+      ''
     ]
   },
   {
@@ -224,9 +224,9 @@ export const PUPPIES_DATA: Puppy[] = [
     dewormed: true,
     vetChecked: true,
     readyDate: 'Departing to family November 15',
-    primaryImage: 'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1000&q=80',
+    primaryImage: '',
     additionalImages: [
-      'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1000&q=80'
+      ''
     ]
   },
   {
@@ -252,9 +252,9 @@ export const PUPPIES_DATA: Puppy[] = [
     dewormed: true,
     vetChecked: true,
     readyDate: 'Available for immediate departure',
-    primaryImage: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=1000&q=80',
+    primaryImage: '',
     additionalImages: [
-      'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=1000&q=80'
+      ''
     ]
   },
   {
@@ -280,9 +280,9 @@ export const PUPPIES_DATA: Puppy[] = [
     dewormed: true,
     vetChecked: true,
     readyDate: 'Available Now',
-    primaryImage: 'https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=1000&q=80',
+    primaryImage: '',
     additionalImages: [
-      'https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=1000&q=80'
+      ''
     ]
   }
 ];
@@ -298,7 +298,7 @@ export const REVIEWS_DATA: AdopterReview[] = [
     rating: 5,
     title: 'The most emotionally intelligent, gentle dog we have ever loved',
     comment: 'Adopting Oliver from Simberwood was an absolute dream. From our initial video consultation through visiting the peaceful countryside grounds, the care and ethical devotion of their team was unmistakable. Oliver arrived crate-trained, sound-desensitized, and has never met a stranger he did not greet with soft tail wags.',
-    photoUrl: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=600&q=80',
+    photoUrl: '',
     verifiedAdopter: true
   },
   {
@@ -311,7 +311,7 @@ export const REVIEWS_DATA: AdopterReview[] = [
     rating: 5,
     title: 'Exemplary health transparency and genuine lifelong support',
     comment: 'As a veterinary physician, health testing and orthopedic soundness were my non-negotiables. Simberwood supplied complete OFA hip scores, PRA DNA genetics, and pediatric cardiology notes before I even finalized my adoption agreement. Gemma is now 18 months old, agile, vibrant, and pure joy.',
-    photoUrl: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=600&q=80',
+    photoUrl: '',
     verifiedAdopter: true
   },
   {
@@ -324,7 +324,7 @@ export const REVIEWS_DATA: AdopterReview[] = [
     rating: 5,
     title: 'Our children have found their guardian angels and best friends',
     comment: 'We adopted our first spaniel Bramble two years ago and came back for Scout this spring! The ENS puppy protocol makes a huge difference: neither dog flinches at thunderstorms or noisy school mornings. Thank you Simberwood for upholding true ethical standards.',
-    photoUrl: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=600&q=80',
+    photoUrl: '',
     verifiedAdopter: true
   },
   {
@@ -337,7 +337,7 @@ export const REVIEWS_DATA: AdopterReview[] = [
     rating: 5,
     title: 'Warm communication and pristine puppy care',
     comment: 'The weekly nursery photo updates and video calls made the waiting period so special. When Poppy arrived via their in-cabin hand courier, she was clean, relaxed, and immediately snuggled right into my cardigan. She is the center of our world.',
-    photoUrl: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=600&q=80',
+    photoUrl: '',
     verifiedAdopter: true
   },
   {
@@ -350,7 +350,7 @@ export const REVIEWS_DATA: AdopterReview[] = [
     rating: 5,
     title: 'Remarkable temperament and apartment adaptability',
     comment: 'Our puppy settled into city life without a single hiccup. The breeder foundations in crate and house training gave us such a peaceful head start. Truly exceptional care.',
-    photoUrl: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80',
+    photoUrl: '',
     verifiedAdopter: true
   },
   {
@@ -363,7 +363,7 @@ export const REVIEWS_DATA: AdopterReview[] = [
     rating: 5,
     title: 'Everything we hoped for and more',
     comment: 'Penny is remarkably gentle with our toddlers and loves her evening cuddle routine. Simberwood devotion to ethical, loving breeding shines in every interaction.',
-    photoUrl: 'https://images.unsplash.com/photo-1598133894008-61f7fdb8cc3a?auto=format&fit=crop&w=600&q=80',
+    photoUrl: '',
     verifiedAdopter: true
   }
 ];
@@ -374,7 +374,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     title: 'Golden Sunshine in the Meadow',
     category: 'puppies',
     caption: 'Our 7-week-old golden litter discovering dew on clover grass in our sheltered puppy garden.',
-    imageUrl: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=1000&q=80',
+    imageUrl: '',
     tag: 'Puppy Nursery'
   },
   {
@@ -382,7 +382,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     title: 'Ch. Braemar Wildwood Ranger',
     category: 'parents',
     caption: 'Our foundation sire, exemplary bench champion with verified OFA hips and PRA clear genetics.',
-    imageUrl: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=1000&q=80',
+    imageUrl: '',
     tag: 'Foundation Sire'
   },
   {
@@ -390,7 +390,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     title: 'Oliver at his 1st Birthday with the Vance Family',
     category: 'alumni',
     caption: 'Alumnus Oliver celebrating his first year with his loving family in Massachusetts.',
-    imageUrl: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=1000&q=80',
+    imageUrl: '',
     tag: 'Simberwood Alumni'
   },
   {
@@ -398,7 +398,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     title: 'Morning Forest Trail Walks',
     category: 'grounds',
     caption: 'Our private 12-acre meadow and woodland trails where our adult dogs enjoy daily free exercise.',
-    imageUrl: 'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1000&q=80',
+    imageUrl: '',
     tag: 'Country Grounds'
   },
   {
@@ -406,7 +406,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     title: 'Curious Snouts & Soft Velvet Ears',
     category: 'puppies',
     caption: 'Early socialization session introducing soft tactile textures, tunnels, and low balance ramps.',
-    imageUrl: 'https://images.unsplash.com/photo-1598133894008-61f7fdb8cc3a?auto=format&fit=crop&w=1000&q=80',
+    imageUrl: '',
     tag: 'ENS Enrichment'
   },
   {
@@ -414,7 +414,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     title: 'Lady Clementine of Sussex',
     category: 'parents',
     caption: 'Sweet matriarch Clementine relaxing under the orchard apple trees during sunset.',
-    imageUrl: 'https://images.unsplash.com/photo-1561037404-61cd46aa615b?auto=format&fit=crop&w=1000&q=80',
+    imageUrl: '',
     tag: 'Foundation Dam'
   },
   {
@@ -422,7 +422,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     title: 'Beach Weekend with Alumnus Jasper',
     category: 'alumni',
     caption: 'Jasper enjoying salty sea spray and safe coastal jogs with his adoptive parents.',
-    imageUrl: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=1000&q=80',
+    imageUrl: '',
     tag: 'Alumni Adventures'
   },
   {
@@ -430,7 +430,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     title: 'Sanctuary Sunroom & Nursery Play Area',
     category: 'grounds',
     caption: 'Temperature-monitored, heated flooring nursery suite where mama dogs nurse and nurture in serenity.',
-    imageUrl: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1000&q=80',
+    imageUrl: '',
     tag: 'Nursery Suite'
   }
 ];
