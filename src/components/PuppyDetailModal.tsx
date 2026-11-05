@@ -35,9 +35,7 @@ export const PuppyDetailModal: React.FC<PuppyDetailModalProps> = ({
 
   if (!puppy) return null;
 
-  const images = puppy.additionalImages && puppy.additionalImages.length > 0
-    ? puppy.additionalImages
-    : [puppy.primaryImage];
+  const images = (puppy.additionalImages?.length ? puppy.additionalImages : [puppy.primaryImage]).filter(Boolean);
 
   return (
     <AnimatePresence>
@@ -71,11 +69,11 @@ export const PuppyDetailModal: React.FC<PuppyDetailModalProps> = ({
             <div className="md:col-span-5 bg-neutral-100 p-6 flex flex-col justify-between border-b md:border-b-0 md:border-r border-neutral-200">
               <div>
                 <div className="aspect-square w-full rounded-xl overflow-hidden bg-white border border-neutral-200 shadow-xs relative">
-                  <img
-                    src={images[selectedImageIndex] || puppy.primaryImage}
-                    alt={puppy.name}
-                    className="w-full h-full object-cover"
-                  />
+                  {images[selectedImageIndex] ? (
+                    <img src={images[selectedImageIndex]} alt={puppy.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-sm font-medium text-neutral-400">No photo uploaded yet</div>
+                  )}
                   <div className="absolute top-3 left-3">
                     <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-neutral-900/90 text-white backdrop-blur-md">
                       {puppy.status === 'available' ? 'Available for Adoption' : 'Reserved'}
@@ -273,11 +271,11 @@ export const PuppyDetailModal: React.FC<PuppyDetailModalProps> = ({
                   className="group bg-white p-2.5 rounded-xl border border-neutral-200 hover:border-neutral-400 transition-all cursor-pointer flex flex-col justify-between"
                 >
                   <div className="aspect-square w-full rounded-lg overflow-hidden bg-neutral-100 mb-2">
-                    <img
-                      src={other.primaryImage}
-                      alt={other.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+                    {other.primaryImage ? (
+                      <img src={other.primaryImage} alt={other.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-[10px] text-neutral-400">Photo coming soon</div>
+                    )}
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-neutral-900 group-hover:text-black">
