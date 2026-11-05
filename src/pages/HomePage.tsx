@@ -64,7 +64,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   // Gallery slideshow state
   const [currentSlide, setCurrentSlide] = useState(0);
   const galleryItems = gallery.length > 0 ? gallery : [
-    { id: 'default-1', imageUrl: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=1000&q=80', pictureWriteup: '', captionWriteup: 'Nursery session' }
+    { id: 'default-1', imageUrl: '', pictureWriteup: '', captionWriteup: 'Nursery session' }
   ];
 
   useEffect(() => {
@@ -428,11 +428,11 @@ export const HomePage: React.FC<HomePageProps> = ({
                 >
                   {/* Puppy Picture */}
                   <div className="aspect-4/3 w-full bg-neutral-100 overflow-hidden">
-                    <img
-                      src={puppy.primaryImage}
-                      alt={puppy.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
+                    {puppy.primaryImage ? (
+                      <img src={puppy.primaryImage} alt={puppy.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-xs font-medium text-neutral-400">Photo coming soon</div>
+                    )}
                   </div>
 
                   {/* Name & Price */}
@@ -676,11 +676,11 @@ export const HomePage: React.FC<HomePageProps> = ({
               >
                 {/* Profile, Name, and Rating */}
                 <div className="flex items-center gap-3">
-                  <img
-                    src={rev.authorPhoto}
-                    alt={rev.author}
-                    className="w-11 h-11 rounded-full object-cover shrink-0 shadow-2xs"
-                  />
+                  {rev.authorPhoto ? (
+                    <img src={rev.authorPhoto} alt={rev.author} className="w-11 h-11 rounded-full object-cover shrink-0 shadow-2xs" />
+                  ) : (
+                    <div aria-label="Reviewer photo not added" className="w-11 h-11 rounded-full bg-neutral-100 shrink-0" />
+                  )}
                   <div>
                     <h3 className="text-base font-bold text-neutral-950 font-['Outfit',sans-serif]">
                       {rev.author}
@@ -758,11 +758,11 @@ export const HomePage: React.FC<HomePageProps> = ({
                   transition={{ duration: 0.45 }}
                   className="w-full h-full relative"
                 >
-                  <img
-                    src={galleryItems[currentSlide].imageUrl}
-                    alt={galleryItems[currentSlide].captionWriteup || `Simberwood Cocker Spaniel photo`}
-                    className="w-full h-full object-cover object-center"
-                  />
+                  {galleryItems[currentSlide].imageUrl ? (
+                    <img src={galleryItems[currentSlide].imageUrl} alt={galleryItems[currentSlide].captionWriteup || 'Simberwood Cocker Spaniel photo'} className="w-full h-full object-cover object-center" />
+                  ) : (
+                    <div className="flex h-full items-center justify-center bg-neutral-100 text-sm font-medium text-neutral-400">Add gallery photos in Admin</div>
+                  )}
                   {galleryItems[currentSlide].pictureWriteup && (
                     <div className="absolute top-4 left-4">
                       <span className="px-3 py-1 rounded-md text-xs font-bold bg-neutral-950/80 text-white backdrop-blur-md">
