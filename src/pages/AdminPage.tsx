@@ -28,17 +28,35 @@ import { motion, AnimatePresence } from 'motion/react';
 import { HeroSettingsTab } from '../components/HeroSettingsTab';
 
 async function uploadAdminImage(file: File): Promise<string> {
-  const password = sessionStorage.getItem('simberwood_admin_password');
-  if (!password) throw new Error('Open Admin → Settings and save the slideshow settings with your Vercel admin password first.');
-  const form = new FormData();
-  form.append('image', file);
-  const response = await fetch('/api/media', {
-    method: 'POST',
-    headers: { 'x-admin-password': password },
-    body: form,
-  });
-  const result = await response.json();
+  let password = sessionStorage.getItem('simberwood_admin_password');
+  if (!password) {
+    password = window.prompt('Enter your Vercel admin password to upload this image:')?.trim() || '';
+  }
+  if (!password) throw new Error('Image upload cancelled. Enter your Vercel admin password to upload.');
+
+  const upload = async (adminPassword: string) => {
+    const form = new FormData();
+    form.append('image', file);
+    const response = await fetch('/api/media', {
+      method: 'POST',
+      headers: { 'x-admin-password': adminPassword },
+      body: form,
+    });
+    const result = await response.json();
+    return { response, result };
+  };
+
+  let { response, result } = await upload(password);
+  if (response.status === 401) {
+    sessionStorage.removeItem('simberwood_admin_password');
+    password = window.prompt('That password was not accepted. Enter your Vercel admin password and try again:')?.trim() || '';
+    if (!password) throw new Error('Image upload cancelled. Enter your Vercel admin password to upload.');
+    ({ response, result } = await upload(password));
+  }
   if (!response.ok) throw new Error(result.error || 'Image upload failed.');
+
+  sessionStorage.setItem('simberwood_admin_password', password);
+  window.dispatchEvent(new Event('simberwood-admin-authenticated'));
   return result.url as string;
 }
 
