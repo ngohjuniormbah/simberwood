@@ -148,7 +148,7 @@ export const HeroSettingsTab: React.FC = () => {
             placeholder="Password set in Vercel environment variables"
             className="mt-1.5 w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900"
           />
-          <p className="mt-2 text-xs text-neutral-500">Set <code>ADMIN_DASHBOARD_PASSWORD</code> in Vercel. Your password is sent only to the server when saving or uploading and is not stored on this device.</p>
+          <p className="mt-2 text-xs text-neutral-500">Set <code>ADMIN_DASHBOARD_PASSWORD</code> in Vercel. After successful verification, the password stays in this browser session so uploads from the Pets, Reviews, and Gallery tabs can use it. It is cleared when the session ends.</p>
         </div>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
