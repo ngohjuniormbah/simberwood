@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Puppy, PUPPIES_DATA, AdopterReview, REVIEWS_DATA, GalleryItem, GALLERY_ITEMS } from '../data/simberwoodData';
 
 export type PetStatus = 'available' | 'reserve' | 'adopted' | 'cancel';
 
@@ -113,324 +112,73 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-// Initial pets from PUPPIES_DATA
-const INITIAL_PETS: PetRecord[] = PUPPIES_DATA.map((p) => ({
-  id: p.id,
-  name: p.name,
-  breedType: p.breedType,
-  coatColor: p.coatColor,
-  gender: p.gender,
-  ageWeeks: p.ageWeeks,
-  adoptionFee: p.adoptionFee,
-  primaryImage: p.primaryImage,
-  additionalImages: p.additionalImages && p.additionalImages.length > 0 ? p.additionalImages : [p.primaryImage],
-  status: p.status === 'available' ? 'available' : 'reserve',
-  headline: p.headline,
-  temperament: p.temperament,
-  description: p.description,
-  dateAdded: '2026-10-15',
-}));
+const cleanImageUrl = (url?: string) => {
+  if (!url || url.startsWith('data:image/') || url.includes('images.unsplash.com')) return '';
+  return url;
+};
 
-// Initial reviews with author profile + photo inside review + optional link
-const INITIAL_REVIEWS: ExtendedReview[] = [
-  {
-    id: 'rev-01',
-    author: 'Eleanor & Marcus Vance',
-    authorPhoto: '',
-    location: 'Boston, MA',
-    rating: 5,
-    title: 'The most emotionally intelligent, gentle dog we have ever loved',
-    comment: 'Adopting Oliver from Simberwood was an absolute dream. Oliver arrived crate-trained, sound-desensitized, and has never met a stranger he did not greet with soft tail wags.',
-    reviewImage: '',
-    reviewLinkUrl: 'https://instagram.com',
-    reviewLinkLabel: 'Instagram @vance_spaniels',
-    date: '2026-09-12',
-    verifiedAdopter: true,
-  },
-  {
-    id: 'rev-02',
-    author: 'Dr. Julian Thorne',
-    authorPhoto: '',
-    location: 'Greenwich, CT',
-    rating: 5,
-    title: 'Exemplary health transparency and genuine lifelong support',
-    comment: 'As a veterinary physician, health testing and orthopedic soundness were my non-negotiables. Simberwood supplied complete OFA hip scores, PRA DNA genetics, and pediatric cardiology notes before I even finalized.',
-    reviewImage: '',
-    date: '2026-08-20',
-    verifiedAdopter: true,
-  },
-  {
-    id: 'rev-03',
-    author: 'The Holloway Family',
-    authorPhoto: '',
-    location: 'Denver, CO',
-    rating: 5,
-    title: 'Our children have found their guardian angels and best friends',
-    comment: 'We adopted our first spaniel Bramble two years ago and came back for Scout this spring! The ENS puppy protocol makes a huge difference: neither dog flinches at thunderstorms.',
-    reviewImage: '',
-    date: '2026-07-05',
-    verifiedAdopter: true,
-  },
-  {
-    id: 'rev-04',
-    author: 'Claire Sterling',
-    authorPhoto: '',
-    location: 'Portland, OR',
-    rating: 5,
-    title: 'Warm communication and pristine puppy care',
-    comment: 'The weekly nursery photo updates and video calls made the waiting period so special. When Poppy arrived via their in-cabin hand courier, she was clean, relaxed, and immediately snuggled right into my cardigan.',
-    reviewImage: '',
-    date: '2026-06-18',
-    verifiedAdopter: true,
-  },
-  {
-    id: 'rev-05',
-    author: 'Marcus & Sophia Chen',
-    authorPhoto: '',
-    location: 'San Francisco, CA',
-    rating: 5,
-    title: 'Remarkable temperament and apartment adaptability',
-    comment: 'Our puppy settled into city life without a single hiccup. The breeder foundations in crate and house training gave us such a peaceful head start. Truly exceptional care.',
-    reviewImage: '',
-    date: '2026-05-24',
-    verifiedAdopter: true,
-  },
-  {
-    id: 'rev-06',
-    author: 'The Gallagher Family',
-    authorPhoto: '',
-    location: 'Austin, TX',
-    rating: 5,
-    title: 'Everything we hoped for and more',
-    comment: 'Penny is remarkably gentle with our toddlers and loves her evening cuddle routine. Simberwood devotion to ethical, loving breeding shines in every interaction.',
-    reviewImage: '',
-    date: '2026-04-12',
-    verifiedAdopter: true,
-  },
-];
-
-// Initial gallery with writeup on picture & writeup below picture
-const INITIAL_GALLERY: ExtendedGalleryItem[] = [
-  {
-    id: 'gal-01',
-    imageUrl: '',
-    pictureWriteup: 'Nursery Play Session • 7 Weeks',
-    captionWriteup: 'Golden buff litter exploring our outdoor country sensory garden.',
-    dateAdded: '2026-10-01',
-  },
-  {
-    id: 'gal-02',
-    imageUrl: '',
-    pictureWriteup: 'Gentle Handling & ENS',
-    captionWriteup: 'Soft velvet ears and calm snuggles during early socialization.',
-    dateAdded: '2026-10-05',
-  },
-  {
-    id: 'gal-03',
-    imageUrl: '',
-    pictureWriteup: 'Cuddle Hour',
-    captionWriteup: 'In-home resting time in temperature-controlled nursery suites.',
-    dateAdded: '2026-10-08',
-  },
-  {
-    id: 'gal-04',
-    imageUrl: '',
-    pictureWriteup: 'Littermates at Play',
-    captionWriteup: 'Developing joyful tail-wags and friendly pack socialization.',
-    dateAdded: '2026-10-12',
-  },
-  {
-    id: 'gal-05',
-    imageUrl: '',
-    pictureWriteup: 'Vet Checked & Ready',
-    captionWriteup: 'Complete pediatric clearance and full health documentation.',
-    dateAdded: '2026-10-18',
-  },
-  {
-    id: 'gal-06',
-    imageUrl: '',
-    pictureWriteup: 'Sweet Temperament',
-    captionWriteup: 'Eager to please and naturally affectionate companion spaniel.',
-    dateAdded: '2026-10-22',
-  },
-];
-
-// Initial sample applications
-const INITIAL_APPLICATIONS: AdoptionApplication[] = [
-  {
-    id: 'SW-834921',
-    date: '2026-11-01 14:32',
-    fullName: 'Hannah Reynolds',
-    phone: '+1 (512) 809-4321',
-    email: 'hannah.reynolds@example.com',
-    address: '4208 Oak Hollow Dr, Austin, TX 78704',
-    residenceType: 'House',
-    ownOrRent: 'Own',
-    petsAllowed: 'Yes',
-    fencedYard: 'Yes',
-    adults: '2',
-    children: '1',
-    everyoneAgrees: 'Yes',
-    ownedDog: 'Yes',
-    currentPets: 'One senior Golden Retriever (10 yrs)',
-    preferredColor: 'Buff / Golden',
-    preferredSex: 'Female',
-    vetCare: 'Yes',
-    customPuppyName: 'Daisy',
-    selectedPuppyId: 'cocker-01',
-    status: 'pending',
-  },
-  {
-    id: 'SW-692145',
-    date: '2026-10-29 09:15',
-    fullName: 'Robert & Michelle Chen',
-    phone: '+1 (312) 555-8902',
-    email: 'robert.chen@example.com',
-    address: '1540 N Lake Shore Dr, Chicago, IL 60610',
-    residenceType: 'Condo',
-    ownOrRent: 'Own',
-    petsAllowed: 'Yes',
-    fencedYard: 'No',
-    adults: '2',
-    children: '0',
-    everyoneAgrees: 'Yes',
-    ownedDog: 'Yes',
-    currentPets: 'None currently',
-    preferredColor: 'Classic Blue Roan',
-    preferredSex: 'Male',
-    vetCare: 'Yes',
-    customPuppyName: 'Barnaby',
-    selectedPuppyId: 'cocker-02',
-    status: 'approved',
-  },
-];
-
-// Initial visitor activities to boost buyer confidence - clean page/item checking
-const INITIAL_SOCIAL_PROOF: SocialProofMessage[] = [
-  {
-    id: 'sp-1',
-    name: 'Sarah M.',
-    location: '',
-    avatar: '',
-    action: 'is checking Available Puppies right now',
-    timeAgo: 'Just now',
-  },
-  {
-    id: 'sp-2',
-    name: 'Marcus & Elena',
-    location: '',
-    avatar: '',
-    action: 'is viewing Barnaby’s adoption details',
-    timeAgo: '1 minute ago',
-  },
-  {
-    id: 'sp-3',
-    name: 'Dr. Katherine B.',
-    location: '',
-    avatar: '',
-    action: 'is reading our 1-Year Genetic Health Guarantee',
-    timeAgo: '2 minutes ago',
-  },
-  {
-    id: 'sp-4',
-    name: 'David W.',
-    location: '',
-    avatar: '',
-    action: 'is browsing puppy nursery gallery photos',
-    timeAgo: '4 minutes ago',
-  },
-  {
-    id: 'sp-5',
-    name: 'Chloe & James',
-    location: '',
-    avatar: '',
-    action: 'is viewing Winnie’s adoption profile',
-    timeAgo: '5 minutes ago',
-  },
-  {
-    id: 'sp-6',
-    name: 'Hannah R.',
-    location: '',
-    avatar: '',
-    action: 'is filling out the Adoption Application form',
-    timeAgo: 'Just now',
-  },
-];
+const SAMPLE_PET_IDS = new Set(Array.from({ length: 8 }, (_, index) => `sw-2026-${String(index + 1).padStart(2, '0')}`));
+const SAMPLE_REVIEW_IDS = new Set(Array.from({ length: 6 }, (_, index) => `rev-0${index + 1}`));
+const SAMPLE_GALLERY_IDS = new Set(Array.from({ length: 6 }, (_, index) => `gal-0${index + 1}`));
 
 const cleanImageUrl = (url?: string) => {
   if (!url || url.startsWith('data:image/') || url.includes('images.unsplash.com')) return '';
   return url;
 };
 
-const cleanPetImages = (items: PetRecord[]) => items.map((pet) => ({
-  ...pet,
-  primaryImage: cleanImageUrl(pet.primaryImage),
-  additionalImages: (pet.additionalImages || []).map(cleanImageUrl).filter(Boolean),
-}));
+const cleanPetImages = (items: PetRecord[]) => items
+  .filter((pet) => !SAMPLE_PET_IDS.has(pet.id))
+  .map((pet) => ({
+    ...pet,
+    primaryImage: cleanImageUrl(pet.primaryImage),
+    additionalImages: (pet.additionalImages || []).map(cleanImageUrl).filter(Boolean),
+  }));
 
-const cleanReviewImages = (items: ExtendedReview[]) => items.map((review) => ({
-  ...review,
-  authorPhoto: cleanImageUrl(review.authorPhoto),
-  reviewImage: cleanImageUrl(review.reviewImage),
-}));
+const cleanReviewImages = (items: ExtendedReview[]) => items
+  .filter((review) => !SAMPLE_REVIEW_IDS.has(review.id))
+  .map((review) => ({
+    ...review,
+    authorPhoto: cleanImageUrl(review.authorPhoto),
+    reviewImage: cleanImageUrl(review.reviewImage),
+  }));
 
-const cleanGalleryImages = (items: ExtendedGalleryItem[]) => items.map((item) => ({
-  ...item,
-  imageUrl: cleanImageUrl(item.imageUrl),
-}));
+const cleanGalleryImages = (items: ExtendedGalleryItem[]) => items
+  .filter((item) => !SAMPLE_GALLERY_IDS.has(item.id))
+  .map((item) => ({
+    ...item,
+    imageUrl: cleanImageUrl(item.imageUrl),
+  }));
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Pets State: Ensure at least 8 initial pets are always loaded
+  // Public listing content is managed from the password-protected admin page.
   const [pets, setPets] = useState<PetRecord[]>(() => {
     try {
       const saved = localStorage.getItem('simberwood_pets');
-      if (saved) {
-        const parsed: PetRecord[] = JSON.parse(saved);
-        if (parsed.length >= 8) return cleanPetImages(parsed);
-        const existingIds = new Set(parsed.map((p) => p.id));
-        const merged = [...parsed, ...INITIAL_PETS.filter((p) => !existingIds.has(p.id))];
-        return cleanPetImages(merged);
-      }
-      return cleanPetImages(INITIAL_PETS);
-    } catch {
-      return INITIAL_PETS;
-    }
+      return saved ? cleanPetImages(JSON.parse(saved)) : [];
+    } catch { return []; }
   });
 
-  // Reviews State: Ensure at least 6 initial reviews are always loaded
   const [reviews, setReviews] = useState<ExtendedReview[]>(() => {
     try {
       const saved = localStorage.getItem('simberwood_reviews');
-      if (saved) {
-        const parsed: ExtendedReview[] = JSON.parse(saved);
-        if (parsed.length >= 6) return cleanReviewImages(parsed);
-        const existingIds = new Set(parsed.map((r) => r.id));
-        const merged = [...parsed, ...INITIAL_REVIEWS.filter((r) => !existingIds.has(r.id))];
-        return cleanReviewImages(merged);
-      }
-      return cleanReviewImages(INITIAL_REVIEWS);
-    } catch {
-      return INITIAL_REVIEWS;
-    }
+      return saved ? cleanReviewImages(JSON.parse(saved)) : [];
+    } catch { return []; }
   });
 
-  // Gallery State
   const [gallery, setGallery] = useState<ExtendedGalleryItem[]>(() => {
     try {
       const saved = localStorage.getItem('simberwood_gallery');
-      return cleanGalleryImages(saved ? JSON.parse(saved) : INITIAL_GALLERY);
-    } catch {
-      return cleanGalleryImages(INITIAL_GALLERY);
-    }
+      return saved ? cleanGalleryImages(JSON.parse(saved)) : [];
+    } catch { return []; }
   });
 
   // Applications State
   const [applications, setApplications] = useState<AdoptionApplication[]>(() => {
     try {
       const saved = localStorage.getItem('simberwood_applications');
-      return saved ? JSON.parse(saved) : INITIAL_APPLICATIONS;
+      return saved ? JSON.parse(saved).filter((app: AdoptionApplication) => !['SW-834921', 'SW-692145'].includes(app.id)) : [];
     } catch {
-      return INITIAL_APPLICATIONS;
+      return [];
     }
   });
 
@@ -438,7 +186,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [pushNotificationsEnabled, setPushNotificationsEnabled] = useState<boolean>(() => {
     try {
       const saved = localStorage.getItem('simberwood_push_enabled');
-      return saved ? JSON.parse(saved) : true;
+      return saved ? JSON.parse(saved) : false;
     } catch {
       return true;
     }
@@ -458,9 +206,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [socialProofMessages, setSocialProofMessages] = useState<SocialProofMessage[]>(() => {
     try {
       const saved = localStorage.getItem('simberwood_social_proof_messages');
-      return saved ? JSON.parse(saved) : INITIAL_SOCIAL_PROOF;
+      return saved ? JSON.parse(saved) : [];
     } catch {
-      return INITIAL_SOCIAL_PROOF;
+      return [];
     }
   });
 
@@ -494,6 +242,43 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     window.addEventListener('simberwood-admin-authenticated', syncAdminSession);
     return () => window.removeEventListener('simberwood-admin-authenticated', syncAdminSession);
   }, []);
+
+  useEffect(() => {
+    if (!hasAdminSession) return;
+    const password = sessionStorage.getItem('simberwood_admin_password');
+    if (!password) return;
+    fetch('/api/applications', { headers: { 'x-admin-password': password } })
+      .then(async (response) => response.ok ? response.json() : null)
+      .then((result) => {
+        if (!Array.isArray(result?.applications)) return;
+        setApplications(result.applications.map((row: Record<string, unknown>) => ({
+          id: String(row.id || ''),
+          date: String(row.submitted_at || ''),
+          fullName: String(row.full_name || ''),
+          phone: String(row.phone || ''),
+          email: String(row.email || ''),
+          address: String(row.address || ''),
+          residenceType: String(row.residence_type || ''),
+          ownOrRent: String(row.own_or_rent || ''),
+          petsAllowed: String(row.pets_allowed || ''),
+          fencedYard: String(row.fenced_yard || ''),
+          adults: String(row.adults || ''),
+          children: String(row.children || ''),
+          everyoneAgrees: String(row.everyone_agrees || ''),
+          ownedDog: String(row.owned_dog || ''),
+          currentPets: String(row.current_pets || ''),
+          preferredColor: String(row.preferred_color || ''),
+          preferredSex: String(row.preferred_sex || ''),
+          vetCare: String(row.vet_care || ''),
+          customPuppyName: typeof row.custom_puppy_name === 'string' ? row.custom_puppy_name : undefined,
+          selectedPuppyId: typeof row.selected_puppy_id === 'string' ? row.selected_puppy_id : undefined,
+          status: ['pending', 'contacted', 'approved', 'rejected'].includes(String(row.status)) ? row.status as AdoptionApplication['status'] : 'pending',
+        })));
+      })
+      .catch((error) => console.error('Could not load adoption applications.', error));
+  }, [hasAdminSession]);
+
+
 
   useEffect(() => {
     if (!siteContentReady || !hasAdminSession) return;
@@ -666,13 +451,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateApplicationStatus = (id: string, status: AdoptionApplication['status']) => {
-    setApplications((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, status } : a))
-    );
+    setApplications((prev) => prev.map((app) => (app.id === id ? { ...app, status } : app)));
+    const password = sessionStorage.getItem('simberwood_admin_password');
+    if (!password) return;
+    fetch('/api/applications', {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json', 'x-admin-password': password },
+      body: JSON.stringify({ id, status }),
+    }).then((response) => {
+      if (!response.ok) console.error('Could not save the application status.');
+    }).catch((error) => console.error('Could not save the application status.', error));
   };
 
   const deleteApplication = (id: string) => {
-    setApplications((prev) => prev.filter((a) => a.id !== id));
+    setApplications((prev) => prev.filter((app) => app.id !== id));
+    const password = sessionStorage.getItem('simberwood_admin_password');
+    if (!password) return;
+    fetch('/api/applications', {
+      method: 'DELETE',
+      headers: { 'content-type': 'application/json', 'x-admin-password': password },
+      body: JSON.stringify({ id }),
+    }).then((response) => {
+      if (!response.ok) console.error('Could not delete the application.');
+    }).catch((error) => console.error('Could not delete the application.', error));
   };
 
   // Social Proof Messages Actions
