@@ -589,11 +589,7 @@ export const AdminPage: React.FC = () => {
                   <div>
                     {/* Primary Photo */}
                     <div className="relative aspect-4/3 w-full bg-neutral-100 overflow-hidden">
-                      <img
-                        src={pet.primaryImage}
-                        alt={pet.name}
-                        className="w-full h-full object-cover"
-                      />
+                      {pet.primaryImage ? <img src={pet.primaryImage} alt={pet.name} className="w-full h-full object-cover" /> : <div className="flex h-full items-center justify-center text-xs text-neutral-400">No photo</div>}
                       {/* Status Tag */}
                       <div className="absolute top-3 left-3">
                         <span
@@ -625,12 +621,7 @@ export const AdminPage: React.FC = () => {
                     {pet.additionalImages && pet.additionalImages.length > 1 && (
                       <div className="px-5 pt-3 flex gap-2 overflow-x-auto">
                         {pet.additionalImages.map((img, i) => (
-                          <img
-                            key={i}
-                            src={img}
-                            alt=""
-                            className="w-10 h-10 rounded-lg object-cover bg-neutral-100 shrink-0"
-                          />
+                          <img key={i} src={img} alt="" className="w-10 h-10 rounded-lg object-cover bg-neutral-100 shrink-0" />
                         ))}
                       </div>
                     )}
@@ -731,11 +722,7 @@ export const AdminPage: React.FC = () => {
                     {/* Author & Profile Photo */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <img
-                          src={rev.authorPhoto}
-                          alt={rev.author}
-                          className="w-12 h-12 rounded-full object-cover bg-neutral-100"
-                        />
+                        {rev.authorPhoto ? <img src={rev.authorPhoto} alt={rev.author} className="w-12 h-12 rounded-full object-cover bg-neutral-100" /> : <div aria-label="Reviewer photo not added" className="w-12 h-12 rounded-full bg-neutral-100" />}
                         <div>
                           <h4 className="text-sm font-bold text-neutral-950">{rev.author}</h4>
                           <p className="text-xs text-neutral-500">{rev.location || 'Verified Adopter'}</p>
@@ -839,11 +826,7 @@ export const AdminPage: React.FC = () => {
                   <div>
                     {/* Photo with Watermark Overlay */}
                     <div className="relative aspect-4/3 w-full bg-neutral-100 overflow-hidden">
-                      <img
-                        src={item.imageUrl}
-                        alt={item.captionWriteup}
-                        className="w-full h-full object-cover"
-                      />
+                      {item.imageUrl ? <img src={item.imageUrl} alt={item.captionWriteup} className="w-full h-full object-cover" /> : <div className="flex h-full items-center justify-center text-xs text-neutral-400">No photo uploaded</div>}
 
                       {/* Watermark Description on Photo */}
                       {item.pictureWriteup && (
