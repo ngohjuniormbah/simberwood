@@ -19,12 +19,16 @@ export const PuppyCard: React.FC<PuppyCardProps> = ({ puppy, onSelect, onApply }
     >
       {/* Puppy Image */}
       <div className="relative aspect-4/3 w-full bg-neutral-100 overflow-hidden">
-        <img
-          src={puppy.primaryImage}
-          alt={`Cocker Spaniel puppy ${puppy.name}`}
-          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-          loading="lazy"
-        />
+        {puppy.primaryImage ? (
+          <img
+            src={puppy.primaryImage}
+            alt={`Cocker Spaniel puppy ${puppy.name}`}
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center text-xs font-medium text-neutral-400">Photo coming soon</div>
+        )}
       </div>
 
       {/* Puppy Name and Price only */}
