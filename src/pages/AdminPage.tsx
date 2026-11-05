@@ -27,6 +27,21 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { HeroSettingsTab } from '../components/HeroSettingsTab';
 
+async function uploadAdminImage(file: File): Promise<string> {
+  const password = sessionStorage.getItem('simberwood_admin_password');
+  if (!password) throw new Error('Open Admin → Settings and save the slideshow settings with your Vercel admin password first.');
+  const form = new FormData();
+  form.append('image', file);
+  const response = await fetch('/api/media', {
+    method: 'POST',
+    headers: { 'x-admin-password': password },
+    body: form,
+  });
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error || 'Image upload failed.');
+  return result.url as string;
+}
+
 type AdminTab = 'pets' | 'reviews' | 'gallery' | 'applications' | 'notifications' | 'settings';
 
 export const AdminPage: React.FC = () => {
@@ -116,37 +131,30 @@ export const AdminPage: React.FC = () => {
     setShowPetModal(true);
   };
 
-  const handlePrimaryPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handlePrimaryPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.currentTarget;
+    const file = input.files?.[0];
+    input.value = '';
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        setPetFormData((prev) => ({ ...prev, primaryImage: reader.result as string }));
-      }
-    };
-    reader.readAsDataURL(file);
-    e.target.value = '';
+    try {
+      const imageUrl = await uploadAdminImage(file);
+      setPetFormData((prev) => ({ ...prev, primaryImage: imageUrl }));
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Image upload failed.');
+    }
   };
 
-  const handleAdditionalPhotosUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-
-    Array.from(files).forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result === 'string') {
-          const resultStr = reader.result;
-          setPetFormData((prev) => ({
-            ...prev,
-            additionalImages: [...prev.additionalImages, resultStr],
-          }));
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-    e.target.value = '';
+  const handleAdditionalPhotosUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.currentTarget;
+    const files = Array.from(input.files || []);
+    input.value = '';
+    if (!files.length) return;
+    try {
+      const uploaded = await Promise.all(files.map(uploadAdminImage));
+      setPetFormData((prev) => ({ ...prev, additionalImages: [...prev.additionalImages, ...uploaded] }));
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Image upload failed.');
+    }
   };
 
   const handleRemoveAdditionalPhoto = (idxToRemove: number) => {
@@ -160,11 +168,14 @@ export const AdminPage: React.FC = () => {
     e.preventDefault();
     if (!petFormData.name.trim()) return;
 
-    const defaultImage = 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=1000&q=80';
-    const finalPrimary = petFormData.primaryImage || defaultImage;
+    const finalPrimary = petFormData.primaryImage.trim();
+    if (!editingPetId && !finalPrimary) {
+      alert('Upload a primary puppy image before adding this puppy.');
+      return;
+    }
     const finalAdditional = petFormData.additionalImages.length > 0
       ? petFormData.additionalImages
-      : [finalPrimary];
+      : finalPrimary ? [finalPrimary] : [];
 
     if (editingPetId) {
       updatePet(editingPetId, {
@@ -243,38 +254,37 @@ export const AdminPage: React.FC = () => {
     setShowReviewModal(true);
   };
 
-  const handleReviewAuthorPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handleReviewAuthorPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.currentTarget;
+    const file = input.files?.[0];
+    input.value = '';
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        setReviewFormData((prev) => ({ ...prev, authorPhoto: reader.result as string }));
-      }
-    };
-    reader.readAsDataURL(file);
-    e.target.value = '';
+    try {
+      const authorPhoto = await uploadAdminImage(file);
+      setReviewFormData((prev) => ({ ...prev, authorPhoto }));
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Image upload failed.');
+    }
   };
 
-  const handleReviewPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handleReviewPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.currentTarget;
+    const file = input.files?.[0];
+    input.value = '';
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        setReviewFormData((prev) => ({ ...prev, reviewImage: reader.result as string }));
-      }
-    };
-    reader.readAsDataURL(file);
-    e.target.value = '';
+    try {
+      const reviewImage = await uploadAdminImage(file);
+      setReviewFormData((prev) => ({ ...prev, reviewImage }));
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Image upload failed.');
+    }
   };
 
   const handleSaveReview = (e: React.FormEvent) => {
     e.preventDefault();
     if (!reviewFormData.author.trim() || !reviewFormData.comment.trim()) return;
 
-    const defaultAuthorPhoto = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80';
-    const finalAuthorPhoto = reviewFormData.authorPhoto.trim() || defaultAuthorPhoto;
+    const finalAuthorPhoto = reviewFormData.authorPhoto.trim();
 
     if (editingReviewId) {
       updateReview(editingReviewId, {
@@ -334,23 +344,26 @@ export const AdminPage: React.FC = () => {
     setShowGalleryModal(true);
   };
 
-  const handleGalleryImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handleGalleryImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.currentTarget;
+    const file = input.files?.[0];
+    input.value = '';
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        setGalleryFormData((prev) => ({ ...prev, imageUrl: reader.result as string }));
-      }
-    };
-    reader.readAsDataURL(file);
-    e.target.value = '';
+    try {
+      const imageUrl = await uploadAdminImage(file);
+      setGalleryFormData((prev) => ({ ...prev, imageUrl }));
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Image upload failed.');
+    }
   };
 
   const handleSaveGallery = (e: React.FormEvent) => {
     e.preventDefault();
-    const defaultGalleryImg = 'https://images.unsplash.com/photo-1598133894008-61f7fdb8cc3a?auto=format&fit=crop&w=1000&q=80';
-    const finalImage = galleryFormData.imageUrl.trim() || defaultGalleryImg;
+    const finalImage = galleryFormData.imageUrl.trim();
+    if (!finalImage) {
+      alert('Upload a gallery image before saving.');
+      return;
+    }
 
     if (editingGalleryId) {
       updateGalleryItem(editingGalleryId, {
