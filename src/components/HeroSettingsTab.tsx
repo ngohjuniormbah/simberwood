@@ -63,6 +63,8 @@ export const HeroSettingsTab: React.FC = () => {
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'Image upload failed.');
       }
+      sessionStorage.setItem('simberwood_admin_password', adminPassword);
+      window.dispatchEvent(new Event('simberwood-admin-authenticated'));
       setSuccess(`${files.length} hero image${files.length === 1 ? '' : 's'} uploaded.`);
       await load();
     } catch (err) {
@@ -88,7 +90,9 @@ export const HeroSettingsTab: React.FC = () => {
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Could not save slideshow settings.');
-      setSuccess('Slideshow settings saved.');
+      sessionStorage.setItem('simberwood_admin_password', adminPassword);
+      window.dispatchEvent(new Event('simberwood-admin-authenticated'));
+      setSuccess('Password confirmed. Site edits and slideshow settings now sync for all visitors.');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not save slideshow settings.');
     } finally {
@@ -129,7 +133,7 @@ export const HeroSettingsTab: React.FC = () => {
           <div className="rounded-xl bg-neutral-100 p-2.5 text-neutral-800"><ImagePlus className="h-5 w-5" /></div>
           <div>
             <h2 className="text-lg font-bold text-neutral-950">Homepage hero slideshow</h2>
-            <p className="mt-1 text-sm leading-relaxed text-neutral-600">Upload background images, choose the slide timing, and control whether the homepage rotates through them.</p>
+            <p className="mt-1 text-sm leading-relaxed text-neutral-600">Upload background images, choose the slide timing, and control whether the homepage rotates through them. Use the Pets, Reviews, and Gallery tabs to add and manage their images.</p>
           </div>
         </div>
 
