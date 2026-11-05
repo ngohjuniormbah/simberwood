@@ -36,11 +36,11 @@ export const ReviewsPage: React.FC = () => {
             >
               {/* Profile, Name, and Rating */}
               <div className="flex items-center gap-3.5">
-                <img
-                  src={rev.authorPhoto}
-                  alt={rev.author}
-                  className="w-12 h-12 rounded-full object-cover shrink-0 shadow-2xs border border-neutral-200"
-                />
+                {rev.authorPhoto ? (
+                  <img src={rev.authorPhoto} alt={rev.author} className="w-12 h-12 rounded-full object-cover shrink-0 shadow-2xs border border-neutral-200" />
+                ) : (
+                  <div aria-label="Reviewer photo not added" className="w-12 h-12 rounded-full bg-neutral-100 border border-neutral-200 shrink-0" />
+                )}
                 <div>
                   <h3 className="text-base font-bold text-neutral-950 font-['Outfit',sans-serif]">
                     {rev.author}
