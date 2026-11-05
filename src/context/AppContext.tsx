@@ -112,11 +112,6 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-const cleanImageUrl = (url?: string) => {
-  if (!url || url.startsWith('data:image/') || url.includes('images.unsplash.com')) return '';
-  return url;
-};
-
 const SAMPLE_PET_IDS = new Set(Array.from({ length: 8 }, (_, index) => `sw-2026-${String(index + 1).padStart(2, '0')}`));
 const SAMPLE_REVIEW_IDS = new Set(Array.from({ length: 6 }, (_, index) => `rev-0${index + 1}`));
 const SAMPLE_GALLERY_IDS = new Set(Array.from({ length: 6 }, (_, index) => `gal-0${index + 1}`));
@@ -186,7 +181,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [pushNotificationsEnabled, setPushNotificationsEnabled] = useState<boolean>(() => {
     try {
       const saved = localStorage.getItem('simberwood_push_enabled');
-      return saved ? JSON.parse(saved) : false;
+      return saved ? JSON.parse(saved) : true;
     } catch {
       return true;
     }
