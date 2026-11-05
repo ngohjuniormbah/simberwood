@@ -357,6 +357,28 @@ const INITIAL_SOCIAL_PROOF: SocialProofMessage[] = [
   },
 ];
 
+const cleanImageUrl = (url?: string) => {
+  if (!url || url.startsWith('data:image/') || url.includes('images.unsplash.com')) return '';
+  return url;
+};
+
+const cleanPetImages = (items: PetRecord[]) => items.map((pet) => ({
+  ...pet,
+  primaryImage: cleanImageUrl(pet.primaryImage),
+  additionalImages: (pet.additionalImages || []).map(cleanImageUrl).filter(Boolean),
+}));
+
+const cleanReviewImages = (items: ExtendedReview[]) => items.map((review) => ({
+  ...review,
+  authorPhoto: cleanImageUrl(review.authorPhoto),
+  reviewImage: cleanImageUrl(review.reviewImage),
+}));
+
+const cleanGalleryImages = (items: ExtendedGalleryItem[]) => items.map((item) => ({
+  ...item,
+  imageUrl: cleanImageUrl(item.imageUrl),
+}));
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Pets State: Ensure at least 8 initial pets are always loaded
   const [pets, setPets] = useState<PetRecord[]>(() => {
@@ -364,12 +386,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const saved = localStorage.getItem('simberwood_pets');
       if (saved) {
         const parsed: PetRecord[] = JSON.parse(saved);
-        if (parsed.length >= 8) return parsed;
+        if (parsed.length >= 8) return cleanPetImages(parsed);
         const existingIds = new Set(parsed.map((p) => p.id));
         const merged = [...parsed, ...INITIAL_PETS.filter((p) => !existingIds.has(p.id))];
-        return merged;
+        return cleanPetImages(merged);
       }
-      return INITIAL_PETS;
+      return cleanPetImages(INITIAL_PETS);
     } catch {
       return INITIAL_PETS;
     }
@@ -381,12 +403,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const saved = localStorage.getItem('simberwood_reviews');
       if (saved) {
         const parsed: ExtendedReview[] = JSON.parse(saved);
-        if (parsed.length >= 6) return parsed;
+        if (parsed.length >= 6) return cleanReviewImages(parsed);
         const existingIds = new Set(parsed.map((r) => r.id));
         const merged = [...parsed, ...INITIAL_REVIEWS.filter((r) => !existingIds.has(r.id))];
-        return merged;
+        return cleanReviewImages(merged);
       }
-      return INITIAL_REVIEWS;
+      return cleanReviewImages(INITIAL_REVIEWS);
     } catch {
       return INITIAL_REVIEWS;
     }
@@ -396,9 +418,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [gallery, setGallery] = useState<ExtendedGalleryItem[]>(() => {
     try {
       const saved = localStorage.getItem('simberwood_gallery');
-      return saved ? JSON.parse(saved) : INITIAL_GALLERY;
+      return cleanGalleryImages(saved ? JSON.parse(saved) : INITIAL_GALLERY);
     } catch {
-      return INITIAL_GALLERY;
+      return cleanGalleryImages(INITIAL_GALLERY);
     }
   });
 
@@ -441,6 +463,59 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return INITIAL_SOCIAL_PROOF;
     }
   });
+
+  const [siteContentReady, setSiteContentReady] = useState(false);
+  const [hasAdminSession, setHasAdminSession] = useState(() =>
+    typeof window !== 'undefined' && Boolean(sessionStorage.getItem('simberwood_admin_password'))
+  );
+
+  useEffect(() => {
+    let active = true;
+    fetch('/api/site-content')
+      .then(async (response) => {
+        if (!response.ok) return null;
+        return response.json();
+      })
+      .then((content) => {
+        if (!active || !content) return;
+        if (Array.isArray(content.pets)) setPets(cleanPetImages(content.pets));
+        if (Array.isArray(content.reviews)) setReviews(cleanReviewImages(content.reviews));
+        if (Array.isArray(content.gallery)) setGallery(cleanGalleryImages(content.gallery));
+      })
+      .catch((error) => console.warn('Using local site content because shared content could not be loaded.', error))
+      .finally(() => { if (active) setSiteContentReady(true); });
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    const syncAdminSession = () => {
+      setHasAdminSession(Boolean(sessionStorage.getItem('simberwood_admin_password')));
+    };
+    window.addEventListener('simberwood-admin-authenticated', syncAdminSession);
+    return () => window.removeEventListener('simberwood-admin-authenticated', syncAdminSession);
+  }, []);
+
+  useEffect(() => {
+    if (!siteContentReady || !hasAdminSession) return;
+    const timer = window.setTimeout(async () => {
+      const password = sessionStorage.getItem('simberwood_admin_password');
+      if (!password) return;
+      try {
+        const response = await fetch('/api/site-content', {
+          method: 'PUT',
+          headers: { 'content-type': 'application/json', 'x-admin-password': password },
+          body: JSON.stringify({ pets, reviews, gallery }),
+        });
+        if (!response.ok) {
+          const result = await response.json().catch(() => ({}));
+          console.error('Shared site content was not saved:', result.error || response.status);
+        }
+      } catch (error) {
+        console.error('Shared site content was not saved.', error);
+      }
+    }, 350);
+    return () => window.clearTimeout(timer);
+  }, [pets, reviews, gallery, siteContentReady, hasAdminSession]);
 
   // Sync to LocalStorage
   useEffect(() => {
