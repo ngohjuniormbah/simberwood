@@ -476,11 +476,11 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
                     </div>
 
                     {/* Step 2 Actions */}
-                    <div className="pt-4 flex items-center justify-between">
+                    <div className="pt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <button
                         type="button"
                         onClick={handlePrev}
-                        className="px-6 py-2.5 rounded-md text-xs font-semibold tracking-wider uppercase text-[#1a2b49] border border-[#1a2b49] hover:bg-neutral-50 transition-colors flex items-center gap-1.5 cursor-pointer"
+                        className="px-6 py-2.5 rounded-md text-xs font-semibold tracking-wider uppercase text-[#1a2b49] border border-[#1a2b49] hover:bg-neutral-50 transition-colors flex w-full items-center justify-center gap-1.5 cursor-pointer sm:w-auto"
                       >
                         <ArrowLeft className="w-3.5 h-3.5" />
                         <span>PREVIOUS</span>
@@ -488,7 +488,7 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
 
                       <button
                         type="submit"
-                        className="px-8 py-3 rounded-md text-xs font-semibold tracking-wider uppercase text-white bg-[#1a2b49] hover:bg-[#111c30] transition-colors flex items-center gap-2 cursor-pointer shadow-sm"
+                        className="px-8 py-3 rounded-md text-xs font-semibold tracking-wider uppercase text-white bg-[#1a2b49] hover:bg-[#111c30] transition-colors flex w-full items-center justify-center gap-2 cursor-pointer shadow-sm sm:w-auto"
                       >
                         <span>NEXT</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -550,6 +550,8 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
                       />
                     </div>
 
+                    {!preselectedPuppyId && (
+                      <>
                     {/* Preferred Color */}
                     <div>
                       <label className="block text-xs font-semibold text-neutral-800 mb-1.5">
@@ -567,6 +569,9 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
                         <option value="Parti-Color / Roan">Parti-Color / Roan</option>
                       </select>
                     </div>
+
+                      </>
+                    )}
 
                     {/* Will you provide routine veterinary care? */}
                     <div>
@@ -591,6 +596,8 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
                       </div>
                     </div>
 
+                    {!preselectedPuppyId && (
+                      <>
                     {/* Preferred Sex */}
                     <div>
                       <label className="block text-xs font-semibold text-neutral-800 mb-1.5">
@@ -607,12 +614,15 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
                       </select>
                     </div>
 
+                      </>
+                    )}
+
                     {/* Step 3 Actions */}
-                    <div className="pt-4 flex items-center justify-between">
+                    <div className="pt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <button
                         type="button"
                         onClick={handlePrev}
-                        className="px-6 py-2.5 rounded-md text-xs font-semibold tracking-wider uppercase text-[#1a2b49] border border-[#1a2b49] hover:bg-neutral-50 transition-colors flex items-center gap-1.5 cursor-pointer"
+                        className="px-6 py-2.5 rounded-md text-xs font-semibold tracking-wider uppercase text-[#1a2b49] border border-[#1a2b49] hover:bg-neutral-50 transition-colors flex w-full items-center justify-center gap-1.5 cursor-pointer sm:w-auto"
                       >
                         <ArrowLeft className="w-3.5 h-3.5" />
                         <span>PREVIOUS</span>
@@ -620,7 +630,7 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
 
                       <button
                         type="submit"
-                        className="px-8 py-3 rounded-md text-xs font-semibold tracking-wider uppercase text-white bg-[#1a2b49] hover:bg-[#111c30] transition-colors flex items-center gap-2 cursor-pointer shadow-sm"
+                        className="px-8 py-3 rounded-md text-xs font-semibold tracking-wider uppercase text-white bg-[#1a2b49] hover:bg-[#111c30] transition-colors flex w-full items-center justify-center gap-2 cursor-pointer shadow-sm sm:w-auto"
                       >
                         <span>NEXT</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -744,11 +754,11 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
                     </label>
 
                     {/* Step 4 Actions */}
-                    <div className="pt-4 flex items-center justify-between">
+                    <div className="pt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <button
                         type="button"
                         onClick={handlePrev}
-                        className="px-6 py-2.5 rounded-md text-xs font-semibold tracking-wider uppercase text-[#1a2b49] border border-[#1a2b49] hover:bg-neutral-50 transition-colors flex items-center gap-1.5 cursor-pointer"
+                        className="px-6 py-2.5 rounded-md text-xs font-semibold tracking-wider uppercase text-[#1a2b49] border border-[#1a2b49] hover:bg-neutral-50 transition-colors flex w-full items-center justify-center gap-1.5 cursor-pointer sm:w-auto"
                       >
                         <ArrowLeft className="w-3.5 h-3.5" />
                         <span>PREVIOUS</span>
@@ -911,22 +921,23 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
                       </div>
                     </div>
 
+                    {submitError && <p role="alert" className="mt-4 break-words rounded-lg bg-red-50 p-3 text-sm leading-relaxed text-red-700">{submitError}</p>}
+
                     {/* Step 5 Actions */}
-                    <div className="pt-4 flex items-center justify-between">
+                    <div className="pt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <button
                         type="button"
                         onClick={handlePrev}
-                        className="px-6 py-2.5 rounded-md text-xs font-semibold tracking-wider uppercase text-[#1a2b49] border border-[#1a2b49] hover:bg-neutral-50 transition-colors flex items-center gap-1.5 cursor-pointer"
+                        className="px-6 py-2.5 rounded-md text-xs font-semibold tracking-wider uppercase text-[#1a2b49] border border-[#1a2b49] hover:bg-neutral-50 transition-colors flex w-full items-center justify-center gap-1.5 cursor-pointer sm:w-auto"
                       >
                         <ArrowLeft className="w-3.5 h-3.5" />
                         <span>PREVIOUS</span>
                       </button>
 
-                      {submitError && <p role="alert" className="text-sm text-red-700">{submitError}</p>}
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="px-8 py-3 rounded-md text-xs font-semibold tracking-wider uppercase text-white bg-[#1a2b49] hover:bg-[#111c30] transition-colors flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-60"
+                        className="px-8 py-3 rounded-md text-xs font-semibold tracking-wider uppercase text-white bg-[#1a2b49] hover:bg-[#111c30] transition-colors flex w-full items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-60 sm:w-auto"
                       >
                         <span>{isSubmitting ? 'SAVING…' : 'SUBMIT APPLICATION'}</span>
                         <ArrowRight className="w-3.5 h-3.5" />
