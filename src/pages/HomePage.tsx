@@ -17,7 +17,7 @@ import {
 interface HomePageProps {
   onNavigate: (page: PageId) => void;
   onSelectPuppy: (puppy: Puppy) => void;
-  onOpenAdoptModal: (puppyId?: string) => void;
+  onOpenAdoptModal: (puppyId?: string, puppyName?: string) => void;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({
@@ -487,7 +487,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        onClick={() => onOpenAdoptModal(puppy.id)}
+                        onClick={() => onOpenAdoptModal(puppy.id, puppy.name)}
                         className="w-full py-2.5 px-3 rounded-xl text-xs font-semibold text-white bg-neutral-900 hover:bg-black border border-neutral-700 shadow-2xs transition-colors cursor-pointer text-center"
                       >
                         Apply to Adopt
