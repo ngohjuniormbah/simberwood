@@ -28,8 +28,7 @@ async function adminQuery(path: string, init: RequestInit = {}) {
   return fetch(`${SUPABASE_URL}/rest/v1/${path}`, { ...init, headers });
 }
 
-export default {
-  async fetch(request: Request): Promise<Response> {
+async function handleFetch(request: Request): Promise<Response> {
     if (['GET', 'PATCH', 'DELETE'].includes(request.method)) {
       if (!ADMIN_PASSWORD || request.headers.get('x-admin-password') !== ADMIN_PASSWORD) {
         return json({ error: 'Admin login required.' }, 401);
@@ -145,5 +144,43 @@ export default {
       console.error('Unable to save adoption application', error);
       return json({ error: 'We could not save your application. Please try again or contact us by email.' }, 500);
     }
-  },
+}
+
+// Use Vercel's Node request/response signature, then adapt to the Web Request API
+// used by the route implementation above.
+type VercelApiRequest = {
+  method?: string;
+  url?: string;
+  headers: Record<string, string | string[] | undefined>;
+  body?: unknown;
 };
+type VercelApiResponse = {
+  status(code: number): VercelApiResponse;
+  setHeader(name: string, value: string): void;
+  send(body: string): void;
+};
+
+export default async function handler(request: VercelApiRequest, response: VercelApiResponse) {
+  try {
+    const method = request.method || 'GET';
+    const headers = new Headers();
+    for (const [name, value] of Object.entries(request.headers)) {
+      if (typeof value === 'string') headers.set(name, value);
+      else if (Array.isArray(value)) headers.set(name, value.join(', '));
+    }
+    const host = headers.get('x-forwarded-host') || headers.get('host') || 'localhost';
+    const protocol = headers.get('x-forwarded-proto') || 'https';
+    const init: RequestInit = { method, headers };
+    if (method !== 'GET' && method !== 'HEAD' && request.body !== undefined) {
+      init.body = typeof request.body === 'string' ? request.body : JSON.stringify(request.body);
+    }
+    const webRequest = new Request(`${protocol}://${host}${request.url || '/api/applications'}`, init);
+    const result = await handleFetch(webRequest);
+    result.headers.forEach((value, name) => response.setHeader(name, value));
+    response.status(result.status).send(await result.text());
+  } catch (error) {
+    console.error('Application API handler failed:', error);
+    response.status(500).setHeader('content-type', 'application/json; charset=utf-8');
+    response.send(JSON.stringify({ error: 'The application service failed to start. Please try again shortly.' }));
+  }
+}
