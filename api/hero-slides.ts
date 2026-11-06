@@ -43,7 +43,7 @@ export default {
         return json(
           { slides: publicSlides, settings: rows[0] ?? { slideshow_enabled: true, interval_seconds: 5 } },
           200,
-          { 'vercel-cdn-cache-control': 'public, s-maxage=60, stale-while-revalidate=300' },
+          { 'vercel-cdn-cache-control': 'public, max-age=60, stale-while-revalidate=300' },
         );
       } catch (error) {
         console.error('Unable to load hero slides', error);
