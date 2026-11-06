@@ -118,7 +118,10 @@ const SAMPLE_GALLERY_IDS = new Set(Array.from({ length: 6 }, (_, index) => `gal-
 
 const cleanImageUrl = (url?: string) => {
   if (!url || url.startsWith('data:image/') || url.includes('images.unsplash.com')) return '';
-  return url;
+  const match = url.match(/\/storage\/v1\/object\/public\/(site-media|hero-backgrounds)\/([0-9a-f-]{36}\.(?:jpg|png|webp|avif))(?:\?.*)?$/i);
+  if (!match) return url;
+  const query = new URLSearchParams({ bucket: match[1], path: match[2] });
+  return `/api/image?${query.toString()}`;
 };
 
 const cleanPetImages = (items: PetRecord[]) => items
