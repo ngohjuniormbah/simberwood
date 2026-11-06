@@ -875,6 +875,8 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
                           <span className="text-neutral-400 block uppercase text-[10px]">CURRENT PETS</span>
                           <span className="font-medium text-neutral-900">{formData.currentPets || 'None'}</span>
                         </div>
+                        {!preselectedPuppyId && (
+                          <>
                         <div>
                           <span className="text-neutral-400 block uppercase text-[10px]">COLOR</span>
                           <span className="font-medium text-neutral-900">{formData.preferredColor}</span>
@@ -883,6 +885,8 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
                           <span className="text-neutral-400 block uppercase text-[10px]">SEX</span>
                           <span className="font-medium text-neutral-900">{formData.preferredSex}</span>
                         </div>
+                          </>
+                        )}
                         <div>
                           <span className="text-neutral-400 block uppercase text-[10px]">VET CARE</span>
                           <span className="font-medium text-neutral-900">{formData.vetCare}</span>
