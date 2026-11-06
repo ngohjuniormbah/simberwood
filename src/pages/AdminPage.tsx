@@ -144,10 +144,12 @@ export const AdminPage: React.FC = () => {
       } else {
         sessionStorage.removeItem('simberwood_admin_password');
         setAdminAuthenticated(false);
+        window.dispatchEvent(new Event('simberwood-admin-authenticated'));
       }
     }).catch(() => {
       setAdminAuthError('Could not verify login. Check your connection and try again.');
       sessionStorage.removeItem('simberwood_admin_password');
+      window.dispatchEvent(new Event('simberwood-admin-authenticated'));
     }).finally(() => setAdminAuthReady(true));
   }, []);
 
