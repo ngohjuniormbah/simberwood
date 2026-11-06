@@ -27,6 +27,31 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { HeroSettingsTab } from '../components/HeroSettingsTab';
 
+async function optimizeAdminImage(file: File): Promise<File> {
+  if (!file.type.startsWith('image/') || typeof createImageBitmap === 'undefined') return file;
+  try {
+    const bitmap = await createImageBitmap(file);
+    const maxDimension = 1600;
+    const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+    const context = canvas.getContext('2d');
+    if (!context) {
+      bitmap.close();
+      return file;
+    }
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close();
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/webp', 0.82));
+    if (!blob || blob.size >= file.size) return file;
+    const name = file.name.replace(/\\.[^.]+$/, '') || 'simberwood-image';
+    return new File([blob], `${name}.webp`, { type: 'image/webp', lastModified: Date.now() });
+  } catch {
+    return file;
+  }
+}
+
 async function uploadAdminImage(file: File): Promise<string> {
   let password = sessionStorage.getItem('simberwood_admin_password');
   if (!password) {
