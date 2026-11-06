@@ -35,15 +35,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-neutral-200">
-      {/* Top bar above navbar: +1 (318) 200-9580 and simberwoodspaniel@gmail.com */}
+      {/* Top bar above navbar: +1 (734) 858-8599 and simberwoodspaniel@gmail.com */}
       <div className="bg-neutral-900 text-neutral-200 text-xs py-2 px-4 border-b border-neutral-800">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-center sm:justify-end gap-x-6 gap-y-1 font-medium tracking-wide">
           <a
-            href="tel:+13182009580"
+            href="tel:+17348588599"
             className="inline-flex items-center gap-1.5 text-neutral-300 hover:text-white transition-colors"
           >
             <Phone className="w-3.5 h-3.5 text-neutral-400" />
-            <span>+1 (318) 200-9580</span>
+            <span>+1 (734) 858-8599</span>
           </a>
           <a
             href="mailto:simberwoodspaniel@gmail.com"
