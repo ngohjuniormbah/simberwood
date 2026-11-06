@@ -45,7 +45,7 @@ async function optimizeAdminImage(file: File): Promise<File> {
     bitmap.close();
     const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/webp', 0.82));
     if (!blob || blob.size >= file.size) return file;
-    const name = file.name.replace(/\\.[^.]+$/, '') || 'simberwood-image';
+    const name = file.name.replace(/\.[^.]+$/, '') || 'simberwood-image';
     return new File([blob], `${name}.webp`, { type: 'image/webp', lastModified: Date.now() });
   } catch {
     return file;
