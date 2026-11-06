@@ -1,8 +1,26 @@
-import { insertSupabaseRow, json } from '../lib/server/supabase';
-
 const SUPABASE_URL = (process.env.SUPABASE_URL || '').replace(/\/+$/, '');
 const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY || '';
 const ADMIN_PASSWORD = process.env.ADMIN_DASHBOARD_PASSWORD || '';
+
+const json = (data: unknown, status = 200) => Response.json(data, {
+  status,
+  headers: { 'cache-control': 'no-store' },
+});
+
+async function insertApplicationRow(row: Record<string, unknown>): Promise<Response> {
+  if (!SUPABASE_URL || !SUPABASE_SECRET_KEY) {
+    return json({ error: 'Database is not configured. Please try again later.' }, 503);
+  }
+  return fetch(`${SUPABASE_URL}/rest/v1/adoption_applications?select=id`, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_SECRET_KEY,
+      'content-type': 'application/json',
+      prefer: 'return=representation',
+    },
+    body: JSON.stringify(row),
+  });
+}
 
 function applicationSaveError(status: number, body: string): string {
   let code = '';
@@ -109,10 +127,7 @@ async function handleFetch(request: Request): Promise<Response> {
 
     const id = `SW-${crypto.randomUUID()}`;
     try {
-      const response = await insertSupabaseRow({
-        SUPABASE_URL: process.env.SUPABASE_URL,
-        SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY,
-      }, 'adoption_applications', {
+      const response = await insertApplicationRow({
         id,
         full_name: String(data.fullName).trim(),
         phone: String(data.phone).trim(),
