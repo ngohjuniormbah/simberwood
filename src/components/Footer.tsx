@@ -98,8 +98,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenAdoptModal }) 
             <ul className="space-y-2 text-xs text-neutral-600">
               <li className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-neutral-700 shrink-0" />
-                <a href="tel:+13182009580" className="hover:text-neutral-950 transition-colors">
-                  +1 (318) 200-9580
+                <a href="tel:+17348588599" className="hover:text-neutral-950 transition-colors">
+                  +1 (734) 858-8599
                 </a>
               </li>
               <li className="flex items-center gap-2">
