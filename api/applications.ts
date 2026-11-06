@@ -1,6 +1,6 @@
 import { insertSupabaseRow, json } from '../lib/server/supabase';
 
-const SUPABASE_URL = (process.env.SUPABASE_URL || '').replace(/\\/+$/, '');
+const SUPABASE_URL = (process.env.SUPABASE_URL || '').replace(/\/+$/, '');
 const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY || '';
 const ADMIN_PASSWORD = process.env.ADMIN_DASHBOARD_PASSWORD || '';
 
