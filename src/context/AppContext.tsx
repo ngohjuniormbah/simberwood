@@ -423,13 +423,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Actions for Applications
   const addApplication = async (appData: Omit<AdoptionApplication, 'id' | 'date' | 'status'>) => {
-    const response = await fetch('/api/applications', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(appData),
-    });
-    if (!response.ok) return null;
-    const result = await response.json() as { id: string };
+    let response: Response;
+    try {
+      response = await fetch('/api/applications', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(appData),
+      });
+    } catch {
+      throw new Error('Could not reach the application service. Check your internet connection and try again.');
+    }
+    const result = await response.json().catch(() => null) as { id?: string; error?: string } | null;
+    if (!response.ok) {
+      throw new Error(result?.error || `Unable to save your application (server error ${response.status}). Please try again.`);
+    }
+    if (!result?.id) throw new Error('The application service did not confirm your submission. Please try again.');
     const newApp: AdoptionApplication = {
       ...appData,
       id: result.id,
