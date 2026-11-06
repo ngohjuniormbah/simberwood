@@ -7,7 +7,7 @@ import { motion } from 'motion/react';
 
 interface AvailablePuppiesPageProps {
   onSelectPuppy: (puppy: Puppy) => void;
-  onOpenAdoptModal: (puppyId?: string) => void;
+  onOpenAdoptModal: (puppyId?: string, puppyName?: string) => void;
 }
 
 export const AvailablePuppiesPage: React.FC<AvailablePuppiesPageProps> = ({
@@ -117,7 +117,7 @@ export const AvailablePuppiesPage: React.FC<AvailablePuppiesPageProps> = ({
                   <PuppyCard
                     puppy={puppyItem}
                     onSelect={onSelectPuppy}
-                    onApply={() => onOpenAdoptModal(pet.id)}
+                    onApply={() => onOpenAdoptModal(pet.id, pet.name)}
                   />
                 </motion.div>
               );
