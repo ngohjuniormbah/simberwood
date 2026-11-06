@@ -7,6 +7,7 @@ interface AdoptApplicationModalProps {
   isOpen: boolean;
   onClose: () => void;
   preselectedPuppyId?: string;
+  preselectedPuppyName?: string;
 }
 
 export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
@@ -142,7 +143,7 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overscroll-contain bg-black/60 p-2 backdrop-blur-xs sm:items-center sm:p-6">
       {/* Backdrop click to close */}
       <div onClick={onClose} className="fixed inset-0" />
 
@@ -151,7 +152,7 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 12 }}
         transition={{ duration: 0.2 }}
-        className="relative bg-[#faf9f6] rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-neutral-200 z-10 p-5 sm:p-8"
+        className="adoption-form-modal relative z-10 my-auto max-h-[calc(100dvh-1rem)] w-full max-w-2xl overflow-y-auto rounded-2xl border border-neutral-200 bg-[#faf9f6] p-4 shadow-2xl sm:max-h-[92vh] sm:rounded-3xl sm:p-8"
       >
         {/* Close Button */}
         <button
@@ -166,6 +167,9 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
           <div>
             {/* Top Stepper Indicator */}
             <div className="mb-8 pt-2">
+              <p className="mb-3 text-center text-xs font-semibold uppercase tracking-wider text-neutral-500 sm:hidden">
+                Step {currentStep} of 5 · {stepLabels[currentStep - 1].label}
+              </p>
               <div className="flex items-center justify-between max-w-xl mx-auto px-2">
                 {stepLabels.map((s, idx) => {
                   const isCompleted = s.num < currentStep;
@@ -186,7 +190,7 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
                           {isCompleted ? <Check className="w-4 h-4 stroke-[3]" /> : s.num}
                         </div>
                         <span
-                          className={`mt-2 text-[9px] sm:text-[10px] tracking-wider uppercase font-semibold transition-colors ${
+                          className={`mt-2 hidden text-[9px] tracking-wider uppercase font-semibold transition-colors sm:block sm:text-[10px] ${
                             isCurrent
                               ? 'text-[#1a2b49] font-bold'
                               : isCompleted
@@ -212,8 +216,14 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
               </div>
             </div>
 
+            {preselectedPuppyName && (
+              <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-700">
+                You’re applying to adopt <strong className="font-bold text-neutral-950">{preselectedPuppyName}</strong>.
+              </div>
+            )}
+
             {/* Main White Card Content */}
-            <div className="bg-white rounded-2xl border border-neutral-100 shadow-sm p-6 sm:p-8">
+            <div className="bg-white rounded-2xl border border-neutral-100 shadow-sm p-4 sm:p-8">
               <form onSubmit={handleNext}>
                 {/* STEP 1: Applicant Information */}
                 {currentStep === 1 && (
@@ -773,6 +783,13 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
                       </p>
                     </div>
 
+                    {preselectedPuppyName && (
+                      <div className="rounded-xl border border-[#1a2b49]/15 bg-[#1a2b49]/5 p-4">
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Pet you’re applying to adopt</p>
+                        <p className="mt-1 text-base font-bold text-[#1a2b49]">{preselectedPuppyName}</p>
+                      </div>
+                    )}
+
                     {/* Personal Info Box */}
                     <div className="p-4 sm:p-5 rounded-xl bg-neutral-50/70 border border-neutral-100 space-y-2">
                       <h4 className="text-xs font-bold text-[#1a2b49] uppercase tracking-wider mb-2">
@@ -942,7 +959,9 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
             </h3>
 
             <p className="text-sm text-neutral-600 max-w-lg mx-auto mt-2 leading-relaxed">
-              Your Cocker Spaniel adoption application has been received. We will review it and contact you at <strong>{formData.email}</strong>.
+              {preselectedPuppyName
+                ? <>Your application to adopt <strong className="text-neutral-950">{preselectedPuppyName}</strong> has been received. We will contact you at <strong>{formData.email}</strong>.</>
+                : <>Your Cocker Spaniel adoption application has been received. We will contact you at <strong>{formData.email}</strong>.</>}
             </p>
 
             <div className="mt-6 p-5 rounded-xl bg-neutral-50 text-left max-w-md mx-auto text-xs space-y-2.5 border border-neutral-200">
