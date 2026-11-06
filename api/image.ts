@@ -1,7 +1,7 @@
-const SUPABASE_URL = (process.env.SUPABASE_URL || '').replace(/\\/+$/, '');
+const SUPABASE_URL = (process.env.SUPABASE_URL || '').replace(/\/+$/, '');
 const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY || '';
 const ALLOWED_BUCKETS = new Set(['site-media', 'hero-backgrounds']);
-const IMAGE_PATH = /^[0-9a-f-]{36}\\.(jpg|png|webp|avif)$/i;
+const IMAGE_PATH = /^[0-9a-f-]{36}\.(jpg|png|webp|avif)$/i;
 
 export default {
   async fetch(request: Request): Promise<Response> {
