@@ -50,7 +50,7 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState<PageId>(parsePageFromUrl);
   const [selectedPuppyForDetail, setSelectedPuppyForDetail] = useState<Puppy | null>(null);
   const [adoptModalOpen, setAdoptModalOpen] = useState(false);
-  const [preselectedPuppyId, setPreselectedPuppyId] = useState<string | undefined>(undefined);
+  const [preselectedPuppyId, setPreselectedPuppyId] = useState<string | undefined>(undefined);\n  const [preselectedPuppyName, setPreselectedPuppyName] = useState<string | undefined>(undefined);
 
   // Synchronize state when browser URL changes (back/forward or direct hash/path change)
   useEffect(() => {
@@ -167,7 +167,7 @@ export default function App() {
           onSelectOtherPuppy={(pup) => setSelectedPuppyForDetail(pup)}
           onApply={(pup) => {
             setSelectedPuppyForDetail(null);
-            handleOpenAdoptModal(pup.id);
+            handleOpenAdoptModal(pup.id, pup.name);
           }}
         />
 
