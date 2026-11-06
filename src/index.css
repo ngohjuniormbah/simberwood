@@ -90,3 +90,12 @@ button,
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Prevent mobile browsers from zooming the adoption form inputs. */
+@media (max-width: 639px) {
+  .adoption-form-modal input:not([type="checkbox"]),
+  .adoption-form-modal select,
+  .adoption-form-modal textarea {
+    font-size: 16px;
+  }
+}
