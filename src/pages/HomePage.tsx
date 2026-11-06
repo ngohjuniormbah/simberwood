@@ -429,7 +429,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   {/* Puppy Picture */}
                   <div className="aspect-4/3 w-full bg-neutral-100 overflow-hidden">
                     {puppy.primaryImage ? (
-                      <img src={puppy.primaryImage} alt={puppy.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <img src={puppy.primaryImage} alt={puppy.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     ) : (
                       <div className="flex h-full items-center justify-center text-xs font-medium text-neutral-400">Photo coming soon</div>
                     )}
@@ -677,7 +677,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 {/* Profile, Name, and Rating */}
                 <div className="flex items-center gap-3">
                   {rev.authorPhoto ? (
-                    <img src={rev.authorPhoto} alt={rev.author} className="w-11 h-11 rounded-full object-cover shrink-0 shadow-2xs" />
+                    <img src={rev.authorPhoto} alt={rev.author} loading="lazy" className="w-11 h-11 rounded-full object-cover shrink-0 shadow-2xs" />
                   ) : (
                     <div aria-label="Reviewer photo not added" className="w-11 h-11 rounded-full bg-neutral-100 shrink-0" />
                   )}
@@ -715,7 +715,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 {/* Optional photo inside the review */}
                 {rev.reviewImage && (
                   <div className="mt-2 rounded-xl overflow-hidden aspect-16/9 bg-neutral-100 max-w-sm">
-                    <img src={rev.reviewImage} alt="Review snapshot" className="w-full h-full object-cover" />
+                    <img src={rev.reviewImage} alt="Review snapshot" loading="lazy" className="w-full h-full object-cover" />
                   </div>
                 )}
               </motion.div>
@@ -759,7 +759,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   className="w-full h-full relative"
                 >
                   {galleryItems[currentSlide].imageUrl ? (
-                    <img src={galleryItems[currentSlide].imageUrl} alt={galleryItems[currentSlide].captionWriteup || 'Simberwood Cocker Spaniel photo'} className="w-full h-full object-cover object-center" />
+                    <img src={galleryItems[currentSlide].imageUrl} alt={galleryItems[currentSlide].captionWriteup || 'Simberwood Cocker Spaniel photo'} loading="lazy" className="w-full h-full object-cover object-center" />
                   ) : (
                     <div className="flex h-full items-center justify-center bg-neutral-100 text-sm font-medium text-neutral-400">Add gallery photos in Admin</div>
                   )}
