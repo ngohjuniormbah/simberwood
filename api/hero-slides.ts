@@ -4,9 +4,9 @@ const ADMIN_PASSWORD = process.env.ADMIN_DASHBOARD_PASSWORD || '';
 const BUCKET = 'hero-backgrounds';
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
-const json = (data: unknown, status = 200) => Response.json(data, {
+const json = (data: unknown, status = 200, headers: HeadersInit = {}) => Response.json(data, {
   status,
-  headers: { 'cache-control': 'no-store' },
+  headers: { 'cache-control': 'no-store', ...headers },
 });
 
 async function supabase(path: string, init: RequestInit = {}) {
@@ -25,16 +25,26 @@ export default {
     if (request.method === 'GET') {
       try {
         const [slidesResponse, settingsResponse] = await Promise.all([
-          supabase('rest/v1/hero_slides?select=id,image_url,position,created_at&order=position.asc,created_at.asc'),
+          supabase('rest/v1/hero_slides?select=id,image_url,storage_path,position,created_at&order=position.asc,created_at.asc'),
           supabase('rest/v1/hero_settings?id=eq.main&select=slideshow_enabled,interval_seconds'),
         ]);
         if (!slidesResponse.ok || !settingsResponse.ok) {
           console.error('Unable to read hero settings from Supabase.');
           return json({ error: 'Hero settings are temporarily unavailable.' }, 503);
         }
-        const slides = await slidesResponse.json();
+        const slides = await slidesResponse.json() as Array<{ id: string; image_url: string; storage_path: string }>;
         const rows = await settingsResponse.json() as Array<{ slideshow_enabled: boolean; interval_seconds: number }>;
-        return json({ slides, settings: rows[0] ?? { slideshow_enabled: true, interval_seconds: 5 } });
+        const publicSlides = slides.map((slide) => {
+          const imageUrl = new URL('/api/image', request.url);
+          imageUrl.searchParams.set('bucket', BUCKET);
+          imageUrl.searchParams.set('path', slide.storage_path);
+          return { ...slide, image_url: imageUrl.toString() };
+        });
+        return json(
+          { slides: publicSlides, settings: rows[0] ?? { slideshow_enabled: true, interval_seconds: 5 } },
+          200,
+          { 'vercel-cdn-cache-control': 'public, s-maxage=60, stale-while-revalidate=300' },
+        );
       } catch (error) {
         console.error('Unable to load hero slides', error);
         return json({ error: 'Hero settings are temporarily unavailable.' }, 503);
