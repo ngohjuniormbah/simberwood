@@ -1,4 +1,24 @@
-import { insertSupabaseRow, json } from '../lib/server/supabase';
+const SUPABASE_URL = (process.env.SUPABASE_URL || '').replace(/\\/+$/, '');
+const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY || '';
+const json = (data: unknown, status = 200) => Response.json(data, {
+  status,
+  headers: { 'cache-control': 'no-store' },
+});
+
+async function insertContactRow(row: Record<string, unknown>): Promise<Response> {
+  if (!SUPABASE_URL || !SUPABASE_SECRET_KEY) {
+    return json({ error: 'Database is not configured. Please try again later.' }, 503);
+  }
+  return fetch(`${SUPABASE_URL}/rest/v1/contact_messages?select=id`, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_SECRET_KEY,
+      'content-type': 'application/json',
+      prefer: 'return=representation',
+    },
+    body: JSON.stringify(row),
+  });
+}
 
 export default {
   async fetch(request: Request): Promise<Response> {
@@ -16,10 +36,7 @@ export default {
     }
 
     try {
-      const response = await insertSupabaseRow({
-        SUPABASE_URL: process.env.SUPABASE_URL,
-        SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY,
-      }, 'contact_messages', {
+      const response = await insertContactRow({
         id: crypto.randomUUID(),
         name,
         email,
