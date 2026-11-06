@@ -30,7 +30,7 @@ export default {
           pets: records.pets ?? null,
           reviews: records.reviews ?? null,
           gallery: records.gallery ?? null,
-        }, 200, { 'vercel-cdn-cache-control': 'public, s-maxage=60, stale-while-revalidate=300' });
+        }, 200, { 'vercel-cdn-cache-control': 'public, max-age=60, stale-while-revalidate=300' });
       } catch (error) {
         console.error('Unable to read shared site content', error);
         return json({ error: 'Shared site images are temporarily unavailable.' }, 503);
