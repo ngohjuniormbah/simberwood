@@ -13,7 +13,7 @@ export default {
   async fetch(request: Request): Promise<Response> {
     if (request.method !== 'POST') return json({ error: 'Method not allowed.' }, 405);
     if (!ADMIN_PASSWORD || request.headers.get('x-admin-password') !== ADMIN_PASSWORD) {
-      return json({ error: 'Open Admin → Settings and enter the configured admin password first.' }, 401);
+      return json({ error: 'Admin login required.' }, 401);
     }
     if (!SUPABASE_URL || !SUPABASE_SECRET_KEY) return json({ error: 'Supabase is not configured.' }, 503);
 
@@ -49,7 +49,10 @@ export default {
         console.error('Supabase rejected site image upload:', upload.status, await upload.text());
         return json({ error: 'Image upload failed. Check the Supabase media bucket and try again.' }, 502);
       }
-      return json({ url: `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}` }, 201);
+      const imageUrl = new URL('/api/image', request.url);
+      imageUrl.searchParams.set('bucket', BUCKET);
+      imageUrl.searchParams.set('path', path);
+      return json({ url: imageUrl.toString() }, 201);
     } catch (error) {
       console.error('Unable to upload site image', error);
       return json({ error: 'Image upload failed. Please try again.' }, 500);
