@@ -839,13 +839,13 @@ export const HomePage: React.FC<HomePageProps> = ({
           >
             <motion.a
               whileHover={{ scale: 1.05 }}
-              href="tel:+13182009580"
+              href="tel:+17348588599"
               className="inline-flex items-center gap-2 hover:text-black transition-colors"
             >
               <div className="w-8 h-8 rounded-full bg-white shadow-2xs flex items-center justify-center text-neutral-700">
                 <Phone className="w-3.5 h-3.5" />
               </div>
-              <span>+1 (318) 200-9580</span>
+              <span>+1 (734) 858-8599</span>
             </motion.a>
 
             <motion.a
