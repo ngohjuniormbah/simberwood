@@ -30,7 +30,7 @@ export default {
       headers.set('content-type', upstream.headers.get('content-type') || 'application/octet-stream');
       headers.set('x-content-type-options', 'nosniff');
       headers.set('cache-control', 'public, max-age=31536000, immutable');
-      headers.set('vercel-cdn-cache-control', 'public, s-maxage=31536000, stale-while-revalidate=86400');
+      headers.set('vercel-cdn-cache-control', 'public, max-age=31536000, stale-while-revalidate=86400');
       return new Response(request.method === 'HEAD' ? null : upstream.body, { status: 200, headers });
     } catch (error) {
       console.error('Could not fetch cached site image.', error);
