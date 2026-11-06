@@ -954,7 +954,7 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
 
             {/* Questions Footer note */}
             <div className="mt-5 text-center text-xs text-neutral-500">
-              Questions? Call <a href="tel:+13182009580" className="font-bold text-[#1a2b49] hover:underline">+1 (318) 200-9580</a>
+              Questions? Call <a href="tel:+17348588599" className="font-bold text-[#1a2b49] hover:underline">+1 (734) 858-8599</a>
             </div>
           </div>
         ) : (
