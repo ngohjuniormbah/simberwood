@@ -4,6 +4,24 @@ const SUPABASE_URL = (process.env.SUPABASE_URL || '').replace(/\/+$/, '');
 const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY || '';
 const ADMIN_PASSWORD = process.env.ADMIN_DASHBOARD_PASSWORD || '';
 
+function applicationSaveError(status: number, body: string): string {
+  let code = '';
+  let message = '';
+  try {
+    const payload = JSON.parse(body) as { code?: unknown; message?: unknown; error?: unknown };
+    code = typeof payload.code === 'string' ? payload.code : '';
+    message = typeof payload.message === 'string' ? payload.message : '';
+  } catch { /* Supabase may return non-JSON errors. */ }
+
+  if (status === 503) return 'The application database is not configured in Vercel. Check SUPABASE_URL and SUPABASE_SECRET_KEY, then redeploy.';
+  if (status === 401 || status === 403 || code === 'PGRST301' || code === '42501') return 'The application database rejected its credentials. Check that SUPABASE_SECRET_KEY is the project secret key in Vercel, then redeploy.';
+  if (code === '42P01' || code === 'PGRST205' || status === 404) return 'The adoption_applications table is missing. Run the repository file supabase/schema.sql in your Supabase SQL Editor.';
+  if (code === '42703' || code === 'PGRST204') return 'The adoption database schema is outdated. Run the latest supabase/schema.sql in your Supabase SQL Editor.';
+  if (code === '23502' || code === '23514' || code === '22P02') return 'The application data did not match the database fields. Please review the form and try again.';
+  if (message.toLowerCase().includes('fetch failed')) return 'The application database could not be reached. Check SUPABASE_URL in Vercel.';
+  return 'We could not save your application. Please contact us and include reference ' + (code || String(status)) + '.';
+}
+
 async function adminQuery(path: string, init: RequestInit = {}) {
   const headers = new Headers(init.headers);
   headers.set('apikey', SUPABASE_SECRET_KEY);
@@ -118,8 +136,9 @@ export default {
         status: 'pending',
       });
       if (!response.ok) {
-        console.error('Supabase rejected adoption application:', response.status, await response.text());
-        return json({ error: 'We could not save your application. Please try again or contact us by email.' }, 500);
+        const errorBody = await response.text();
+        console.error('Supabase rejected adoption application:', response.status, errorBody);
+        return json({ error: applicationSaveError(response.status, errorBody) }, response.status === 503 ? 503 : 500);
       }
       return json({ id }, 201);
     } catch (error) {
