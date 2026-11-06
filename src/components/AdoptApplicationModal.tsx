@@ -14,6 +14,7 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
   isOpen,
   onClose,
   preselectedPuppyId,
+  preselectedPuppyName,
 }) => {
   const { addApplication } = useApp();
   const [currentStep, setCurrentStep] = useState(1);
@@ -58,9 +59,7 @@ export const AdoptApplicationModal: React.FC<AdoptApplicationModalProps> = ({
   });
 
   useEffect(() => {
-    if (preselectedPuppyId) {
-      setFormData((prev) => ({ ...prev, selectedPuppyId: preselectedPuppyId }));
-    }
+    setFormData((prev) => ({ ...prev, selectedPuppyId: preselectedPuppyId || '' }));
   }, [preselectedPuppyId]);
 
   useEffect(() => {
