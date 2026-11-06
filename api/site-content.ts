@@ -2,9 +2,9 @@ const SUPABASE_URL = (process.env.SUPABASE_URL || '').replace(/\/+$/, '');
 const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY || '';
 const ADMIN_PASSWORD = process.env.ADMIN_DASHBOARD_PASSWORD || '';
 
-const json = (data: unknown, status = 200) => Response.json(data, {
+const json = (data: unknown, status = 200, headers: HeadersInit = {}) => Response.json(data, {
   status,
-  headers: { 'cache-control': 'no-store' },
+  headers: { 'cache-control': 'no-store', ...headers },
 });
 
 async function query(path: string, init: RequestInit = {}) {
@@ -30,7 +30,7 @@ export default {
           pets: records.pets ?? null,
           reviews: records.reviews ?? null,
           gallery: records.gallery ?? null,
-        });
+        }, 200, { 'vercel-cdn-cache-control': 'public, s-maxage=60, stale-while-revalidate=300' });
       } catch (error) {
         console.error('Unable to read shared site content', error);
         return json({ error: 'Shared site images are temporarily unavailable.' }, 503);
