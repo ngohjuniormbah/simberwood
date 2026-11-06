@@ -75,13 +75,13 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
           <motion.a
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.98 }}
-            href="tel:+13182009580"
+            href="tel:+17348588599"
             className="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-neutral-50 hover:bg-neutral-100 border border-neutral-200 transition-colors"
           >
             <div className="w-8 h-8 rounded-full bg-neutral-900 flex items-center justify-center text-white">
               <Phone className="w-3.5 h-3.5" />
             </div>
-            <span>+1 (318) 200-9580</span>
+            <span>+1 (734) 858-8599</span>
           </motion.a>
 
           <motion.a
